@@ -1,0 +1,65 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "fastapi-mvt"
+version = "0.1.0"
+description = "A Django-inspired MVT framework built on top of FastAPI"
+readme = "README.md"
+authors = [
+    {name = "FastAPI MVT Team"}
+]
+license = {text = "MIT"}
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Framework :: FastAPI",
+]
+keywords = ["fastapi", "mvt", "django", "framework", "web"]
+
+dependencies = [
+    "fastapi>=0.104.0",
+    "uvicorn[standard]>=0.24.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "python-dotenv>=1.0.0",
+    "jinja2>=3.1.0",
+    "celery>=5.3.0",
+    "redis>=5.0.0",
+    "python-multipart>=0.0.6",
+    "typer>=0.9.0",
+    "bcrypt>=4.0.0",
+    "python-jose[cryptography]>=3.3.0",
+    "itsdangerous>=2.1.0",
+    "websockets>=12.0",
+    "aiosqlite>=0.19.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+    "httpx>=0.24.0",
+]
+
+[project.scripts]
+fastapi-mvt = "fastapi_mvt.cli:app"
+
+[project.urls]
+Homepage = "https://github.com/yourusername/fastapi-mvt"
+Documentation = "https://github.com/yourusername/fastapi-mvt#readme"
+Repository = "https://github.com/yourusername/fastapi-mvt"
+
+[tool.setuptools.packages.find]
+include = ["fastapi_mvt*"]
+exclude = ["tests*"]
