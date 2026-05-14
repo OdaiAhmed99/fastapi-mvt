@@ -631,7 +631,7 @@ async def lifespan(app: FastAPI):
     # ── Startup ───────────────────────────────────────────────────────────────
     # Import signals.py from every installed app and wire SQLAlchemy ORM events.
     # After this, @receiver decorators fire automatically on every save/delete.
-    from fastapi_mvt.signals import setup_signals
+    from fastapi_mvt.core.signals import setup_signals
     setup_signals(settings.INSTALLED_APPS, Base)
     yield
     # ── Shutdown ──────────────────────────────────────────────────────────────

@@ -295,7 +295,7 @@ def setup_signals(installed_apps: Sequence[str], Base) -> None:
 
     Typical usage in ``main.py`` startup::
 
-        from fastapi_mvt.signals import setup_signals
+        from fastapi_mvt.core.signals import setup_signals
         from myproject.db import Base
         from myproject.settings import Settings
 
