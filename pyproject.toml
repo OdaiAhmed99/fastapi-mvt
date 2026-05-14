@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastapi-mvt"
-version = "0.1.002"
+version = "0.1.003"
 description = "A Django-inspired MVT framework built on top of FastAPI"
 readme = "README.md"
 authors = [
