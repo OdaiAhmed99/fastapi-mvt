@@ -1,0 +1,24 @@
+"""Example tests. The `client` and `db` fixtures come from fastapi-mvt:
+
+* every test runs in a transaction that is rolled back afterwards
+* the test database is created from your migrations, so they are tested too
+"""
+
+from users.models import User
+
+
+async def test_health(client):
+    response = await client.get("/health")
+    assert response.status_code == 200
+
+
+async def test_register_login_and_me(client):
+    response = await client.post("/auth/register", json={"email": "ada@example.com", "password": "correct-horse"})
+    assert response.status_code == 201, response.text
+
+    response = await client.post("/auth/login", json={"email": "ada@example.com", "password": "correct-horse"})
+    token = response.json()["access_token"]
+
+    response = await client.get("/auth/me", headers={"Authorization": f"Bearer {token}"})
+    assert response.json()["email"] == "ada@example.com"
+    assert await User.objects.filter(email="ada@example.com").exists()

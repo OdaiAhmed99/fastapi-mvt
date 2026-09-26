@@ -1,0 +1,32 @@
+"""Settings, read from environment variables and the .env file.
+
+Every field can be set as an environment variable of the same name in upper
+case (DATABASE_URL, SECRET_KEY, ...). Values in the real environment win over .env.
+"""
+
+from pathlib import Path
+
+from pydantic_settings import BaseSettings, SettingsConfigDict
+
+BASE_DIR = Path(__file__).resolve().parent.parent
+
+
+class Settings(BaseSettings):
+    model_config = SettingsConfigDict(env_file=BASE_DIR / ".env", extra="ignore")
+
+    debug: bool = False
+    # Required, no default: the app refuses to start without it.
+    secret_key: str
+
+    database_url: str = f"sqlite:///{(BASE_DIR / 'db.sqlite3').as_posix()}"
+    sql_echo: bool = False
+
+    # Browser origins allowed to call the API, as JSON: ["http://localhost:3000"]
+    allowed_origins: list[str] = []
+
+    access_token_minutes: int = 30
+    refresh_token_days: int = 7
+
+
+# Values come from the environment, which type checkers can't see.
+settings = Settings()  # type: ignore[call-arg]

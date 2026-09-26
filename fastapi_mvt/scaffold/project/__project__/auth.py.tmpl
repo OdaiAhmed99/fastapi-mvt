@@ -1,0 +1,33 @@
+"""Authentication: JWT access/refresh tokens for the User model.
+
+Protect a route with the `CurrentUser` type:
+
+    @router.get("/me/posts")
+    async def my_posts(user: CurrentUser):
+        return await Post.objects.filter(author_id=user.id)
+"""
+
+from typing import Annotated
+
+from fastapi import Depends
+from fastapi_mvt.auth import Auth
+
+from {{project}}.settings import settings
+from users.models import User
+
+
+# To enable /auth/password-reset, deliver the token (usually by email) and pass
+# `send_password_reset=send_password_reset` to Auth below:
+#
+# async def send_password_reset(user: User, token: str) -> None:
+#     await send_email(user.email, "Reset your password", f"https://app.example.com/reset?token={token}")
+
+auth = Auth(
+    User,
+    secret_key=settings.secret_key,
+    access_token_minutes=settings.access_token_minutes,
+    refresh_token_days=settings.refresh_token_days,
+)
+
+CurrentUser = Annotated[User, Depends(auth.current_user)]
+Superuser = Annotated[User, Depends(auth.superuser)]

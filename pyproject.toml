@@ -1,65 +1,80 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = ["setuptools>=69", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "fastapi-mvt"
-version = "0.1.003"
-description = "A Django-inspired MVT framework built on top of FastAPI"
+version = "0.2.0"
+description = "Django-style productivity for FastAPI: an async ORM layer on SQLAlchemy 2, safe migrations and a project CLI."
 readme = "README.md"
-authors = [
-    {name = "FastAPI MVT Team"}
-]
-license = {text = "MIT"}
-requires-python = ">=3.8"
+authors = [{ name = "Odai Thalji" }]
+license = { text = "MIT" }
+requires-python = ">=3.10"
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
     "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.8",
-    "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
     "Framework :: FastAPI",
+    "Framework :: AsyncIO",
+    "Framework :: Pytest",
 ]
-keywords = ["fastapi", "mvt", "django", "framework", "web"]
+keywords = ["fastapi", "django", "orm", "sqlalchemy", "alembic", "migrations"]
 
+# Core stays small. Everything else is an extra.
 dependencies = [
-    "fastapi>=0.104.0",
-    "uvicorn[standard]>=0.24.0",
-    "sqlalchemy>=2.0.0",
-    "alembic>=1.13.0",
-    "pydantic>=2.0.0",
-    "pydantic-settings>=2.0.0",
-    "python-dotenv>=1.0.0",
-    "jinja2>=3.1.0",
-    "celery>=5.3.0",
-    "redis>=5.0.0",
-    "python-multipart>=0.0.6",
-    "typer>=0.9.0",
-    "bcrypt>=4.0.0",
-    "python-jose[cryptography]>=3.3.0",
-    "itsdangerous>=2.1.0",
-    "websockets>=12.0",
-    "aiosqlite>=0.19.0",
+    "fastapi>=0.115",
+    "sqlalchemy[asyncio]>=2.0.36",
+    "alembic>=1.14",
+    "pydantic>=2.7",
+    "pydantic-settings>=2.4",
+    "typer>=0.13",
+    "aiosqlite>=0.20",
+    "tomli>=2.0; python_version < '3.11'",
 ]
 
 [project.optional-dependencies]
-dev = [
-    "pytest>=7.0.0",
-    "pytest-asyncio>=0.21.0",
-    "httpx>=0.24.0",
-]
+postgres = ["asyncpg>=0.29"]
+mysql = ["aiomysql>=0.2"]
+auth = ["pyjwt>=2.8", "python-multipart>=0.0.9"]
+admin = ["sqladmin>=0.20", "itsdangerous>=2.1"]
+redis = ["redis>=5.0"]
+server = ["uvicorn[standard]>=0.30"]
+test = ["pytest>=8", "pytest-asyncio>=0.24", "httpx>=0.27"]
+all = ["fastapi-mvt[postgres,auth,admin,redis,server,test]"]
+dev = ["fastapi-mvt[all]", "ruff>=0.6", "mypy>=1.10", "markdown>=3.5", "build"]
 
 [project.scripts]
-fastapi-mvt = "fastapi_mvt.cli:app"
+fastapi-mvt = "fastapi_mvt.cli:main"
+
+[project.entry-points.pytest11]
+fastapi_mvt = "fastapi_mvt.testing.plugin"
 
 [project.urls]
-Homepage = "https://github.com/yourusername/fastapi-mvt"
-Documentation = "https://github.com/yourusername/fastapi-mvt#readme"
-Repository = "https://github.com/yourusername/fastapi-mvt"
+Homepage = "https://github.com/OdaiAhmed99/fastapi-mvt"
+Documentation = "https://odaiahmed99.github.io/fastapi-mvt/"
+Repository = "https://github.com/OdaiAhmed99/fastapi-mvt"
 
 [tool.setuptools.packages.find]
 include = ["fastapi_mvt*"]
-exclude = ["tests*"]
+
+[tool.setuptools.package-data]
+fastapi_mvt = ["py.typed", "scaffold/**/*", "migrations/templates/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+filterwarnings = ["error::sqlalchemy.exc.SAWarning"]
+markers = ["slow: end-to-end tests that run the CLI in subprocesses"]
+
+[tool.ruff]
+line-length = 110
+target-version = "py310"
+
+[tool.setuptools.exclude-package-data]
+"*" = ["*.pyc", "__pycache__/*"]

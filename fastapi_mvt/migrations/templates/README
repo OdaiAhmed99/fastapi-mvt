@@ -1,0 +1,9 @@
+Database migrations (Alembic), managed by fastapi-mvt.
+
+    python manage.py makemigrations      # detect model changes, write a new migration
+    python manage.py migrate             # apply pending migrations
+    python manage.py showmigrations      # list migrations and whether they're applied
+    python manage.py migrate 0003        # move to a specific migration (forward or back)
+    python manage.py sqlmigrate 0003     # print the SQL of a migration
+
+Migration files are regular Alembic scripts and can be edited.

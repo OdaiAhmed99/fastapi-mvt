@@ -1,0 +1,31 @@
+"""The FastAPI application."""
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+
+from {{project}}.auth import auth
+from {{project}}.db import db
+from {{project}}.settings import settings
+
+app = FastAPI(title="{{project}}", debug=settings.debug)
+
+# One transaction per request, ORM errors mapped to 404 / 409.
+db.init_app(app)
+
+if settings.allowed_origins:
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=settings.allowed_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
+
+
+@app.get("/health", tags=["meta"])
+async def health() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+# Routers. `startapp` adds new apps below this line.
+app.include_router(auth.router)

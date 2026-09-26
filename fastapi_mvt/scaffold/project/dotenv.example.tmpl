@@ -1,0 +1,4 @@
+DEBUG=false
+SECRET_KEY=generate-with: python -c "import secrets; print(secrets.token_urlsafe(50))"
+DATABASE_URL=postgresql://user:password@localhost:5432/{{project}}
+ALLOWED_ORIGINS=["https://example.com"]

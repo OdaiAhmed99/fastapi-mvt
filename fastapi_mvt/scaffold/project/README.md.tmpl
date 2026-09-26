@@ -1,0 +1,35 @@
+# {{project}}
+
+Built with [fastapi-mvt](https://github.com/OdaiAhmed99/fastapi-mvt).
+
+## Setup
+
+```bash
+python -m venv .venv && source .venv/bin/activate   # Windows: .venv\Scripts\activate
+pip install -e ".[test]"
+python manage.py makemigrations     # creates migrations/ and the first migration
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver          # http://127.0.0.1:8000/docs
+```
+
+## Everyday commands
+
+| Command | What it does |
+|---|---|
+| `python manage.py startapp blog --crud Post` | New app with a model, schemas, CRUD router and tests |
+| `python manage.py makemigrations` | Detect model changes and write a migration |
+| `python manage.py migrate` | Apply migrations (`migrate 0003` moves back or forward) |
+| `python manage.py showmigrations` | List migrations and whether they are applied |
+| `python manage.py shell` | Python shell with your models loaded (top-level `await` works) |
+| `python manage.py check` | Verify config, models and migrations (use it in CI) |
+| `pytest` | Run tests against a throwaway test database |
+
+## Layout
+
+```
+{{project}}/        settings, database, app wiring, auth
+users/              the User model
+tests/
+migrations/         created by the first makemigrations
+```
