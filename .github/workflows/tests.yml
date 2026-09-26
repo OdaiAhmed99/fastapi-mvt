@@ -32,7 +32,8 @@ jobs:
         with:
           python-version: ${{ matrix.python }}
       - run: python -m pip install --upgrade pip
-      - run: pip install -e ".[dev]"
+      # compat mode: mypy cannot see PEP 660 editable installs
+      - run: pip install -e ".[dev]" --config-settings editable_mode=compat
       - run: ruff check fastapi_mvt tests --select E,F,W,B,I --ignore E501,B008
       - run: mypy fastapi_mvt --ignore-missing-imports
       - name: Run tests

@@ -338,6 +338,17 @@ def test_generated_code_passes_ruff_and_mypy(project: Project):
     )
     assert lint.returncode == 0, lint.stdout + lint.stderr
     pytest.importorskip("mypy")
+    probe = p.root / "mypy_probe.py"
+    probe.write_text("import fastapi_mvt.db\n")
+    visible = subprocess.run(
+        [sys.executable, "-m", "mypy", str(probe)], cwd=p.root, capture_output=True, text=True, encoding="utf-8"
+    )
+    probe.unlink()
+    if "import-not-found" in visible.stdout:
+        pytest.skip(
+            "mypy can't see fastapi_mvt (a PEP 660 editable install); "
+            'reinstall with: pip install -e . --config-settings editable_mode=compat'
+        )
     types = subprocess.run(
         [sys.executable, "-m", "mypy", "shop", "users", "catalog", "blog", "--ignore-missing-imports"],
         cwd=p.root, capture_output=True, text=True, encoding="utf-8",

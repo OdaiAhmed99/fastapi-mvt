@@ -331,7 +331,7 @@ def _register_explicit_loader() -> str:
             )
 
         # Named LazyLoader in SQLAlchemy 2.0, _LazyLoader in 2.1.
-        lazy_loader = getattr(strategies, "LazyLoader", None) or strategies._LazyLoader
+        lazy_loader = getattr(strategies, "LazyLoader", None) or getattr(strategies, "_LazyLoader")  # noqa: B009
 
         @RelationshipProperty.strategy_for(lazy="explicit")
         class ExplicitLoader(lazy_loader):  # type: ignore[misc, valid-type]

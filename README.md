@@ -119,7 +119,7 @@ Python 3.10+. Tested on SQLite and PostgreSQL 16.
 ## Development
 
 ```bash
-pip install -e ".[dev]"
+pip install -e ".[dev]" --config-settings editable_mode=compat   # compat: so mypy can see the package
 pytest                                   # SQLite
 TEST_DATABASE_URL=postgresql://user:pass@localhost/mvt pytest   # PostgreSQL
 pytest -m "not slow"                     # skip the end-to-end CLI tests
