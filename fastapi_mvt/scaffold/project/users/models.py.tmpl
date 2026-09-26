@@ -1,0 +1,9 @@
+"""The user model. Add your own fields here: they become columns and migrations."""
+
+from fastapi_mvt.auth import AbstractUser
+from fastapi_mvt.db import CharField, TimestampedModel
+
+
+class User(AbstractUser, TimestampedModel):
+    # Provided by AbstractUser: email, password (hashed), is_active, is_superuser, last_login.
+    full_name = CharField(max_length=150, null=True)

@@ -1,0 +1,260 @@
+<title>fastapi-mvt Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #F6F8F7;
+  --surface: #FFFFFF;
+  --ink: #14201D;
+  --muted: #56655F;
+  --rule: #D9E2DE;
+  --accent: #0E7C6B;
+  --accent-soft: #DDEFEA;
+  --code-bg: #EDF2F0;
+  --term-bg: #13201C;
+  --term-ink: #CFE3DC;
+  --term-dim: #7FA398;
+  --hl-key: #8A3FA0;
+  --hl-str: #0F6E3A;
+  --hl-num: #A5520E;
+  --hl-com: #7A8A84;
+  --hl-fn: #1F5FA8;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0E1513; --surface: #141E1B; --ink: #E2ECE8; --muted: #93A8A1; --rule: #25332F;
+    --accent: #4CC4AC; --accent-soft: #173B34; --code-bg: #17231F; --term-bg: #09100E;
+    --term-ink: #CFE3DC; --term-dim: #6F9186;
+    --hl-key: #D59BE6; --hl-str: #8FD6A6; --hl-num: #F0B27A; --hl-com: #6F8580; --hl-fn: #8CB8F0;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0E1513; --surface: #141E1B; --ink: #E2ECE8; --muted: #93A8A1; --rule: #25332F;
+  --accent: #4CC4AC; --accent-soft: #173B34; --code-bg: #17231F; --term-bg: #09100E;
+  --term-ink: #CFE3DC; --term-dim: #6F9186;
+  --hl-key: #D59BE6; --hl-str: #8FD6A6; --hl-num: #F0B27A; --hl-com: #6F8580; --hl-fn: #8CB8F0;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 16px/1.65 var(--body); }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+.shell { display: grid; grid-template-columns: 272px minmax(0, 1fr); max-width: 1240px; margin: 0 auto; padding-inline: 16px; gap: 48px; }
+
+/* ── Sidebar ── */
+.sidebar { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 28px 40px; }
+.brand { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.brand b { font: 700 22px/1 var(--display); letter-spacing: -0.02em; }
+.brand span { font: 500 12px var(--mono); color: var(--muted); }
+.tagline { color: var(--muted); font-size: 13.5px; line-height: 1.45; margin: 6px 0 22px; }
+.sidebar ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.page-link { display: block; padding: 6px 10px; border-radius: 6px; color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; }
+.page-link:hover { background: var(--accent-soft); }
+li.current > .page-link { background: var(--accent-soft); color: var(--accent); }
+.sections { display: none; list-style: none; margin: 4px 0 10px 10px; padding: 0 0 0 12px; border-left: 1px solid var(--rule); }
+li.current > .sections { display: grid; gap: 1px; }
+.sections a { display: block; padding: 3px 8px; font-size: 13.5px; color: var(--muted); text-decoration: none; line-height: 1.4; border-radius: 4px; }
+.sections a:hover { color: var(--ink); }
+.sections a.active { color: var(--accent); font-weight: 500; }
+.theme-row { margin-top: 24px; display: flex; gap: 6px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.theme-row button { font: inherit; background: none; border: 1px solid var(--rule); color: var(--muted); padding: 3px 9px; border-radius: 999px; cursor: pointer; }
+.theme-row button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.mobile-nav { display: none; }
+
+/* ── Content ── */
+main { padding-block: 36px 96px; min-width: 0; }
+.page { max-width: 760px; }
+.page h1 { font: 700 clamp(30px, 4.4vw, 42px)/1.1 var(--display); letter-spacing: -0.025em; margin: 0 0 18px; text-wrap: balance; }
+.page h2 { font: 700 26px/1.2 var(--display); letter-spacing: -0.015em; margin: 56px 0 14px; padding-top: 18px; border-top: 1px solid var(--rule); text-wrap: balance; }
+.page h3 { font: 600 18.5px/1.3 var(--body); margin: 34px 0 10px; }
+.page h4 { font: 600 16px/1.3 var(--body); margin: 24px 0 8px; }
+.page h1 + p { font-size: 18.5px; color: var(--muted); line-height: 1.55; }
+.page p, .page li { max-width: 68ch; }
+.page ul, .page ol { padding-left: 1.3em; }
+.page li + li { margin-top: 4px; }
+.page hr { border: 0; height: 0; margin: 40px 0 0; }
+.page blockquote { margin: 22px 0; padding: 12px 18px; background: var(--accent-soft); border-radius: 8px; }
+.page blockquote p { margin: 0; }
+.page strong { font-weight: 600; }
+[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 16px); }
+
+code { font-family: var(--mono); font-size: 0.88em; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+.code-wrap { position: relative; margin: 18px 0; }
+pre { margin: 0; padding: 16px 18px; background: var(--code-bg); border-radius: 8px; overflow-x: auto; font-size: 13.8px; line-height: 1.6; }
+pre code { font-size: inherit; background: none; padding: 0; }
+pre.output { background: var(--term-bg); color: var(--term-ink); }
+pre.output::before { content: "output"; display: block; font: 500 10.5px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--term-dim); margin-bottom: 8px; }
+pre code.language-bash::before { content: ""; }
+.copy { position: absolute; top: 8px; right: 8px; font: 500 12px var(--body); padding: 3px 9px; border-radius: 5px; border: 1px solid var(--rule); background: var(--surface); color: var(--muted); cursor: pointer; opacity: 0; transition: opacity .15s; }
+.code-wrap:hover .copy, .copy:focus-visible { opacity: 1; }
+.code-wrap:has(pre.output) .copy { display: none; }
+
+.hljs-keyword, .hljs-built_in, .hljs-literal, .hljs-meta .hljs-keyword { color: var(--hl-key); }
+.hljs-string, .hljs-attr + .hljs-string { color: var(--hl-str); }
+.hljs-number { color: var(--hl-num); }
+.hljs-comment { color: var(--hl-com); font-style: italic; }
+.hljs-title, .hljs-title.function_, .hljs-title.class_ { color: var(--hl-fn); }
+.hljs-attr, .hljs-section { color: var(--hl-fn); }
+.hljs-meta { color: var(--hl-com); }
+
+.table-wrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 14px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--ground); }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+
+.pager { display: flex; justify-content: space-between; gap: 16px; margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+.pager a { text-decoration: none; display: grid; gap: 2px; padding: 10px 14px; border: 1px solid var(--rule); border-radius: 8px; min-width: 0; }
+.pager a:hover { border-color: var(--accent); }
+.pager small { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+.pager span { font-weight: 600; color: var(--ink); }
+.pager .next { margin-left: auto; text-align: right; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; gap: 10px; align-items: center; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--ground); padding-block: 12px; border-bottom: 1px solid var(--rule); }
+  .mobile-nav b { font: 700 18px var(--display); white-space: nowrap; }
+  .mobile-nav select { flex: 1; min-width: 0; font: 500 15px var(--body); padding: 7px 10px; border-radius: 6px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+  main { padding-block: 20px 72px; }
+  .page h2 { margin-top: 44px; }
+  td code { white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+
+<div class="mobile-nav" role="navigation" aria-label="Documentation">
+  <b>fastapi-mvt</b>
+  <label for="page-select" style="position:absolute;left:-9999px">Page</label>
+  <select id="page-select"></select>
+</div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Documentation">
+    <div class="brand"><b>fastapi-mvt</b><span>v0.2</span></div>
+    <p class="tagline">Django's productivity for FastAPI, on SQLAlchemy&nbsp;2 and Alembic.</p>
+    <ul id="nav">
+{{NAV}}
+    </ul>
+    <div class="theme-row" role="group" aria-label="Theme">
+      <button type="button" data-theme-choice="system">System</button>
+      <button type="button" data-theme-choice="light">Light</button>
+      <button type="button" data-theme-choice="dark">Dark</button>
+    </div>
+  </nav>
+
+  <main id="content">
+{{PAGES}}
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function () {
+  const pages = [...document.querySelectorAll(".page")];
+  const navItems = [...document.querySelectorAll("#nav > li")];
+  const select = document.getElementById("page-select");
+
+  // Wrap tables and code blocks so they scroll on their own, never the page.
+  document.querySelectorAll(".page table").forEach(t => {
+    const w = document.createElement("div"); w.className = "table-wrap"; t.replaceWith(w); w.appendChild(t);
+  });
+  document.querySelectorAll(".page pre").forEach(pre => {
+    const w = document.createElement("div"); w.className = "code-wrap"; pre.replaceWith(w); w.appendChild(pre);
+    const b = document.createElement("button"); b.type = "button"; b.className = "copy"; b.textContent = "Copy";
+    b.addEventListener("click", () => {
+      const text = pre.innerText.replace(/\n$/, "");
+      const done = () => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, () => selectText(pre));
+      } else { selectText(pre); }
+    });
+    w.appendChild(b);
+  });
+  function selectText(node) {
+    const r = document.createRange(); r.selectNodeContents(node);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  if (window.hljs) {
+    document.querySelectorAll(".page pre:not(.output) code").forEach(el => {
+      if (/language-(toml|ini)/.test(el.className)) el.className = "language-ini";
+      if (/language-text/.test(el.className)) return;
+      try { hljs.highlightElement(el); } catch (e) {}
+    });
+  }
+
+  // Previous / next links make the tutorial and guides readable as a sequence.
+  pages.forEach((page, i) => {
+    const pager = document.createElement("nav"); pager.className = "pager"; pager.setAttribute("aria-label", "Pages");
+    if (i > 0) pager.insertAdjacentHTML("beforeend", `<a class="prev" href="#${pages[i-1].id}"><small>Previous</small><span>${pages[i-1].dataset.label}</span></a>`);
+    if (i < pages.length - 1) pager.insertAdjacentHTML("beforeend", `<a class="next" href="#${pages[i+1].id}"><small>Next</small><span>${pages[i+1].dataset.label}</span></a>`);
+    page.appendChild(pager);
+    const opt = document.createElement("option"); opt.value = page.id; opt.textContent = page.dataset.label; select.appendChild(opt);
+  });
+  select.addEventListener("change", () => { location.hash = select.value; });
+
+  let current = null;
+  function route() {
+    const hash = decodeURIComponent(location.hash.slice(1));
+    const pageId = hash.split("--")[0];
+    const page = pages.find(p => p.id === pageId) || pages[0];
+    if (page !== current) {
+      pages.forEach(p => (p.hidden = p !== page));
+      navItems.forEach(li => li.classList.toggle("current", li.dataset.page === page.id));
+      select.value = page.id;
+      current = page;
+      observeSections();
+    }
+    const target = hash.includes("--") ? document.getElementById(hash) : null;
+    if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", route);
+
+  // Highlight the section being read in the sidebar.
+  let observer;
+  function observeSections() {
+    if (observer) observer.disconnect();
+    if (!("IntersectionObserver" in window)) return;
+    const links = new Map([...document.querySelectorAll(".sections a")].map(a => [a.getAttribute("href").slice(1), a]));
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && links.has(e.target.id)) {
+          links.forEach(a => a.classList.remove("active"));
+          links.get(e.target.id).classList.add("active");
+        }
+      });
+    }, { rootMargin: "0px 0px -70% 0px" });
+    current.querySelectorAll("h2[id]").forEach(h => observer.observe(h));
+  }
+
+  // Theme: System / Light / Dark, remembered per viewer when storage is available.
+  const buttons = [...document.querySelectorAll("[data-theme-choice]")];
+  function applyTheme(choice) {
+    if (choice === "light" || choice === "dark") document.documentElement.setAttribute("data-theme", choice);
+    else document.documentElement.removeAttribute("data-theme");
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.themeChoice === choice)));
+  }
+  let saved = "system";
+  try { saved = localStorage.getItem("mvt-docs-theme") || "system"; } catch (e) {}
+  if (!document.documentElement.hasAttribute("data-theme") || saved !== "system") applyTheme(saved);
+  else buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.themeChoice === document.documentElement.getAttribute("data-theme"))));
+  buttons.forEach(b => b.addEventListener("click", () => {
+    applyTheme(b.dataset.themeChoice);
+    try { localStorage.setItem("mvt-docs-theme", b.dataset.themeChoice); } catch (e) {}
+  }));
+
+  route();
+})();
+</script>

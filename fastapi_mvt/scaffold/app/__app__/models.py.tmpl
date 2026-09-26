@@ -1,0 +1,19 @@
+"""Models for {{app}}. Run `python manage.py makemigrations` after changing them."""
+{% crud %}
+
+from fastapi_mvt.db import CharField, TextField, TimestampedModel
+
+
+class {{Model}}(TimestampedModel):
+    name = CharField(max_length=200)
+    description = TextField(null=True)
+{% else %}
+
+# from fastapi_mvt.db import CASCADE, CharField, ForeignKey, Mapped, TextField, TimestampedModel, relationship
+#
+# class Post(TimestampedModel):
+#     title = CharField(max_length=200)
+#     body = TextField(null=True)
+#     author_id = ForeignKey("User", on_delete=CASCADE)
+#     author: Mapped["User"] = relationship()
+{% end %}

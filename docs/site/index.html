@@ -1,0 +1,3217 @@
+<title>fastapi-mvt Docs</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap">
+<style>
+:root {
+  --ground: #F6F8F7;
+  --surface: #FFFFFF;
+  --ink: #14201D;
+  --muted: #56655F;
+  --rule: #D9E2DE;
+  --accent: #0E7C6B;
+  --accent-soft: #DDEFEA;
+  --code-bg: #EDF2F0;
+  --term-bg: #13201C;
+  --term-ink: #CFE3DC;
+  --term-dim: #7FA398;
+  --hl-key: #8A3FA0;
+  --hl-str: #0F6E3A;
+  --hl-num: #A5520E;
+  --hl-com: #7A8A84;
+  --hl-fn: #1F5FA8;
+  --display: "Bricolage Grotesque", "Segoe UI", system-ui, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", system-ui, -apple-system, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --ground: #0E1513; --surface: #141E1B; --ink: #E2ECE8; --muted: #93A8A1; --rule: #25332F;
+    --accent: #4CC4AC; --accent-soft: #173B34; --code-bg: #17231F; --term-bg: #09100E;
+    --term-ink: #CFE3DC; --term-dim: #6F9186;
+    --hl-key: #D59BE6; --hl-str: #8FD6A6; --hl-num: #F0B27A; --hl-com: #6F8580; --hl-fn: #8CB8F0;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --ground: #0E1513; --surface: #141E1B; --ink: #E2ECE8; --muted: #93A8A1; --rule: #25332F;
+  --accent: #4CC4AC; --accent-soft: #173B34; --code-bg: #17231F; --term-bg: #09100E;
+  --term-ink: #CFE3DC; --term-dim: #6F9186;
+  --hl-key: #D59BE6; --hl-str: #8FD6A6; --hl-num: #F0B27A; --hl-com: #6F8580; --hl-fn: #8CB8F0;
+}
+
+* { box-sizing: border-box; }
+body { background: var(--ground); color: var(--ink); font: 16px/1.65 var(--body); }
+a { color: var(--accent); text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible, select:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 3px; }
+
+.shell { display: grid; grid-template-columns: 272px minmax(0, 1fr); max-width: 1240px; margin: 0 auto; padding-inline: 16px; gap: 48px; }
+
+/* ── Sidebar ── */
+.sidebar { position: sticky; top: env(safe-area-inset-top, 0px); align-self: start; max-height: 100vh; overflow-y: auto; padding-block: 28px 40px; }
+.brand { display: flex; align-items: baseline; gap: 8px; margin-bottom: 4px; }
+.brand b { font: 700 22px/1 var(--display); letter-spacing: -0.02em; }
+.brand span { font: 500 12px var(--mono); color: var(--muted); }
+.tagline { color: var(--muted); font-size: 13.5px; line-height: 1.45; margin: 6px 0 22px; }
+.sidebar ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 2px; }
+.page-link { display: block; padding: 6px 10px; border-radius: 6px; color: var(--ink); text-decoration: none; font-weight: 500; font-size: 15px; }
+.page-link:hover { background: var(--accent-soft); }
+li.current > .page-link { background: var(--accent-soft); color: var(--accent); }
+.sections { display: none; list-style: none; margin: 4px 0 10px 10px; padding: 0 0 0 12px; border-left: 1px solid var(--rule); }
+li.current > .sections { display: grid; gap: 1px; }
+.sections a { display: block; padding: 3px 8px; font-size: 13.5px; color: var(--muted); text-decoration: none; line-height: 1.4; border-radius: 4px; }
+.sections a:hover { color: var(--ink); }
+.sections a.active { color: var(--accent); font-weight: 500; }
+.theme-row { margin-top: 24px; display: flex; gap: 6px; align-items: center; font-size: 12.5px; color: var(--muted); }
+.theme-row button { font: inherit; background: none; border: 1px solid var(--rule); color: var(--muted); padding: 3px 9px; border-radius: 999px; cursor: pointer; }
+.theme-row button[aria-pressed="true"] { border-color: var(--accent); color: var(--accent); }
+
+.mobile-nav { display: none; }
+
+/* ── Content ── */
+main { padding-block: 36px 96px; min-width: 0; }
+.page { max-width: 760px; }
+.page h1 { font: 700 clamp(30px, 4.4vw, 42px)/1.1 var(--display); letter-spacing: -0.025em; margin: 0 0 18px; text-wrap: balance; }
+.page h2 { font: 700 26px/1.2 var(--display); letter-spacing: -0.015em; margin: 56px 0 14px; padding-top: 18px; border-top: 1px solid var(--rule); text-wrap: balance; }
+.page h3 { font: 600 18.5px/1.3 var(--body); margin: 34px 0 10px; }
+.page h4 { font: 600 16px/1.3 var(--body); margin: 24px 0 8px; }
+.page h1 + p { font-size: 18.5px; color: var(--muted); line-height: 1.55; }
+.page p, .page li { max-width: 68ch; }
+.page ul, .page ol { padding-left: 1.3em; }
+.page li + li { margin-top: 4px; }
+.page hr { border: 0; height: 0; margin: 40px 0 0; }
+.page blockquote { margin: 22px 0; padding: 12px 18px; background: var(--accent-soft); border-radius: 8px; }
+.page blockquote p { margin: 0; }
+.page strong { font-weight: 600; }
+[id] { scroll-margin-top: calc(env(safe-area-inset-top, 0px) + 16px); }
+
+code { font-family: var(--mono); font-size: 0.88em; }
+:not(pre) > code { background: var(--code-bg); padding: 1px 5px; border-radius: 4px; overflow-wrap: anywhere; }
+
+.code-wrap { position: relative; margin: 18px 0; }
+pre { margin: 0; padding: 16px 18px; background: var(--code-bg); border-radius: 8px; overflow-x: auto; font-size: 13.8px; line-height: 1.6; }
+pre code { font-size: inherit; background: none; padding: 0; }
+pre.output { background: var(--term-bg); color: var(--term-ink); }
+pre.output::before { content: "output"; display: block; font: 500 10.5px var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--term-dim); margin-bottom: 8px; }
+pre code.language-bash::before { content: ""; }
+.copy { position: absolute; top: 8px; right: 8px; font: 500 12px var(--body); padding: 3px 9px; border-radius: 5px; border: 1px solid var(--rule); background: var(--surface); color: var(--muted); cursor: pointer; opacity: 0; transition: opacity .15s; }
+.code-wrap:hover .copy, .copy:focus-visible { opacity: 1; }
+.code-wrap:has(pre.output) .copy { display: none; }
+
+.hljs-keyword, .hljs-built_in, .hljs-literal, .hljs-meta .hljs-keyword { color: var(--hl-key); }
+.hljs-string, .hljs-attr + .hljs-string { color: var(--hl-str); }
+.hljs-number { color: var(--hl-num); }
+.hljs-comment { color: var(--hl-com); font-style: italic; }
+.hljs-title, .hljs-title.function_, .hljs-title.class_ { color: var(--hl-fn); }
+.hljs-attr, .hljs-section { color: var(--hl-fn); }
+.hljs-meta { color: var(--hl-com); }
+
+.table-wrap { overflow-x: auto; margin: 18px 0; border: 1px solid var(--rule); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 14.5px; }
+th, td { text-align: left; vertical-align: top; padding: 9px 14px; border-bottom: 1px solid var(--rule); }
+th { font-weight: 600; font-size: 12.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--muted); background: var(--ground); }
+tr:last-child td { border-bottom: 0; }
+td code { white-space: nowrap; }
+
+.pager { display: flex; justify-content: space-between; gap: 16px; margin-top: 64px; padding-top: 20px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+.pager a { text-decoration: none; display: grid; gap: 2px; padding: 10px 14px; border: 1px solid var(--rule); border-radius: 8px; min-width: 0; }
+.pager a:hover { border-color: var(--accent); }
+.pager small { color: var(--muted); font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; }
+.pager span { font-weight: 600; color: var(--ink); }
+.pager .next { margin-left: auto; text-align: right; }
+
+@media (max-width: 900px) {
+  .shell { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .sidebar { display: none; }
+  .mobile-nav { display: flex; gap: 10px; align-items: center; position: sticky; top: env(safe-area-inset-top, 0px); z-index: 2; background: var(--ground); padding-block: 12px; border-bottom: 1px solid var(--rule); }
+  .mobile-nav b { font: 700 18px var(--display); white-space: nowrap; }
+  .mobile-nav select { flex: 1; min-width: 0; font: 500 15px var(--body); padding: 7px 10px; border-radius: 6px; border: 1px solid var(--rule); background: var(--surface); color: var(--ink); }
+  main { padding-block: 20px 72px; }
+  .page h2 { margin-top: 44px; }
+  td code { white-space: normal; }
+}
+@media (prefers-reduced-motion: reduce) { * { scroll-behavior: auto !important; transition: none !important; } }
+</style>
+
+<div class="mobile-nav" role="navigation" aria-label="Documentation">
+  <b>fastapi-mvt</b>
+  <label for="page-select" style="position:absolute;left:-9999px">Page</label>
+  <select id="page-select"></select>
+</div>
+
+<div class="shell">
+  <nav class="sidebar" aria-label="Documentation">
+    <div class="brand"><b>fastapi-mvt</b><span>v0.2</span></div>
+    <p class="tagline">Django's productivity for FastAPI, on SQLAlchemy&nbsp;2 and Alembic.</p>
+    <ul id="nav">
+<li data-page="overview"><a class="page-link" href="#overview">Overview</a><ol class="sections"><li><a href="#overview--quick-start">Quick start</a></li><li><a href="#overview--documentation">Documentation</a></li><li><a href="#overview--commands">Commands</a></li><li><a href="#overview--installation-extras">Installation extras</a></li><li><a href="#overview--development">Development</a></li></ol></li>
+<li data-page="tutorial"><a class="page-link" href="#tutorial">Tutorial</a><ol class="sections"><li><a href="#tutorial--the-finished-project">The finished project</a></li><li><a href="#tutorial--1-create-the-project">1. Create the project</a></li><li><a href="#tutorial--2-users-and-roles">2. Users and roles</a></li><li><a href="#tutorial--3-your-first-app-events">3. Your first app: events</a></li><li><a href="#tutorial--4-migrations">4. Migrations</a></li><li><a href="#tutorial--5-schemas-what-the-api-accepts-and-returns">5. Schemas: what the API accepts and returns</a></li><li><a href="#tutorial--6-endpoints">6. Endpoints</a></li><li><a href="#tutorial--7-business-rules-and-transactions">7. Business rules and transactions</a></li><li><a href="#tutorial--8-real-time-likes-with-websockets">8. Real-time likes with WebSockets</a></li><li><a href="#tutorial--9-tests">9. Tests</a></li><li><a href="#tutorial--10-changing-the-schema-safely">10. Changing the schema safely</a></li><li><a href="#tutorial--11-admin-and-production">11. Admin and production</a></li><li><a href="#tutorial--where-next">Where next</a></li></ol></li>
+<li data-page="orm"><a class="page-link" href="#orm">ORM guide</a><ol class="sections"><li><a href="#orm--defining-models">Defining models</a></li><li><a href="#orm--relationships">Relationships</a></li><li><a href="#orm--querying">Querying</a></li><li><a href="#orm--creating-updating-deleting">Creating, updating, deleting</a></li><li><a href="#orm--transactions">Transactions</a></li><li><a href="#orm--schemas">Schemas</a></li><li><a href="#orm--pagination">Pagination</a></li><li><a href="#orm--custom-querysets">Custom QuerySets</a></li><li><a href="#orm--using-sqlalchemy-directly">Using SQLAlchemy directly</a></li><li><a href="#orm--sync-code">Sync code</a></li><li><a href="#orm--where-sessions-come-from">Where sessions come from</a></li><li><a href="#orm--common-errors">Common errors</a></li><li><a href="#orm--performance">Performance</a></li></ol></li>
+<li data-page="migrations"><a class="page-link" href="#migrations">Migrations</a><ol class="sections"><li><a href="#migrations--commands">Commands</a></li><li><a href="#migrations--the-workflow">The workflow</a></li><li><a href="#migrations--safety-checks">Safety checks</a></li><li><a href="#migrations--which-models-are-included">Which models are included</a></li><li><a href="#migrations--data-migrations">Data migrations</a></li><li><a href="#migrations--sqlite-and-postgresql">SQLite and PostgreSQL</a></li><li><a href="#migrations--working-in-a-team">Working in a team</a></li><li><a href="#migrations--in-production">In production</a></li><li><a href="#migrations--adopting-an-existing-database">Adopting an existing database</a></li><li><a href="#migrations--using-alembic-directly">Using Alembic directly</a></li></ol></li>
+<li data-page="testing"><a class="page-link" href="#testing">Testing</a><ol class="sections"><li><a href="#testing--fixtures">Fixtures</a></li><li><a href="#testing--the-test-database">The test database</a></li><li><a href="#testing--authenticated-requests">Authenticated requests</a></li><li><a href="#testing--tips">Tips</a></li></ol></li>
+<li data-page="auth-and-admin"><a class="page-link" href="#auth-and-admin">Auth & admin</a><ol class="sections"><li><a href="#auth-and-admin--the-user-model">The user model</a></li><li><a href="#auth-and-admin--setup">Setup</a></li><li><a href="#auth-and-admin--endpoints">Endpoints</a></li><li><a href="#auth-and-admin--login-protection">Login protection</a></li><li><a href="#auth-and-admin--password-reset">Password reset</a></li><li><a href="#auth-and-admin--protecting-endpoints">Protecting endpoints</a></li><li><a href="#auth-and-admin--how-tokens-are-revoked">How tokens are revoked</a></li><li><a href="#auth-and-admin--customising">Customising</a></li><li><a href="#auth-and-admin--admin-site">Admin site</a></li></ol></li>
+<li data-page="cli"><a class="page-link" href="#cli">Command line</a><ol class="sections"><li><a href="#cli--project">Project</a></li><li><a href="#cli--migrations">Migrations</a></li><li><a href="#cli--development">Development</a></li><li><a href="#cli--your-own-commands">Your own commands</a></li></ol></li>
+<li data-page="deployment"><a class="page-link" href="#deployment">Deployment</a><ol class="sections"><li><a href="#deployment--settings">Settings</a></li><li><a href="#deployment--release-steps">Release steps</a></li><li><a href="#deployment--docker">Docker</a></li><li><a href="#deployment--connection-pool">Connection pool</a></li><li><a href="#deployment--background-jobs">Background jobs</a></li><li><a href="#deployment--websockets-across-processes">WebSockets across processes</a></li><li><a href="#deployment--security-checklist">Security checklist</a></li></ol></li>
+<li data-page="comparison"><a class="page-link" href="#comparison">Comparison</a><ol class="sections"><li><a href="#comparison--the-short-answer">The short answer</a></li><li><a href="#comparison--fastapi-mvt-vs-django-ninja">fastapi-mvt vs Django Ninja</a></li><li><a href="#comparison--fastapi-mvt-vs-sqlmodel">fastapi-mvt vs SQLModel</a></li><li><a href="#comparison--fastapi-mvt-vs-the-fastapi-full-stack-template">fastapi-mvt vs the FastAPI full-stack template</a></li><li><a href="#comparison--fastapi-mvt-vs-plain-sqlalchemy">fastapi-mvt vs plain SQLAlchemy</a></li><li><a href="#comparison--when-fastapi-mvt-is-the-wrong-choice">When fastapi-mvt is the wrong choice</a></li></ol></li>
+<li data-page="design"><a class="page-link" href="#design">Design notes</a><ol class="sections"><li><a href="#design--what-it-is">What it is</a></li><li><a href="#design--why-sqlalchemy-and-not-sqlmodel">Why SQLAlchemy, and not SQLModel</a></li><li><a href="#design--decisions-in-the-data-layer">Decisions in the data layer</a></li><li><a href="#design--decisions-in-migrations">Decisions in migrations</a></li><li><a href="#design--why-a-cli-and-not-only-a-template">Why a CLI and not only a template</a></li><li><a href="#design--what-was-removed-from-01-and-why">What was removed from 0.1, and why</a></li><li><a href="#design--developer-experience-decisions">Developer experience decisions</a></li><li><a href="#design--what-is-deliberately-not-included">What is deliberately not included</a></li></ol></li>
+<li data-page="upgrading-from-0.1"><a class="page-link" href="#upgrading-from-0.1">Upgrading from 0.1</a><ol class="sections"><li><a href="#upgrading-from-0.1--quickest-path">Quickest path</a></li><li><a href="#upgrading-from-0.1--models">Models</a></li><li><a href="#upgrading-from-0.1--queries-and-sessions">Queries and sessions</a></li><li><a href="#upgrading-from-0.1--adopting-the-existing-database">Adopting the existing database</a></li></ol></li>
+<li data-page="changelog"><a class="page-link" href="#changelog">Changelog</a><ol class="sections"><li><a href="#changelog--020-unreleased">0.2.0 (unreleased)</a></li></ol></li>
+    </ul>
+    <div class="theme-row" role="group" aria-label="Theme">
+      <button type="button" data-theme-choice="system">System</button>
+      <button type="button" data-theme-choice="light">Light</button>
+      <button type="button" data-theme-choice="dark">Dark</button>
+    </div>
+  </nav>
+
+  <main id="content">
+<article class="page" id="overview" data-label="Overview" hidden><h1 id="overview--fastapi-mvt">fastapi-mvt</h1>
+<p><strong>Django's productivity for FastAPI, without leaving FastAPI or SQLAlchemy.</strong></p>
+<p>fastapi-mvt is a library, not a framework around FastAPI. Your app stays a
+normal FastAPI app; fastapi-mvt gives it:</p>
+<ul>
+<li>a <strong>Django-style ORM layer on SQLAlchemy 2</strong>: <code>Post.objects.filter(author__name="Ada")</code>,
+  async all the way, no session plumbing;</li>
+<li><strong>Django's migration workflow on Alembic</strong> (<code>makemigrations</code>, <code>migrate</code>,
+  <code>showmigrations</code>), with the safety checks Alembic leaves out: rename
+  detection, confirmation before data loss, one-off defaults for new required fields;</li>
+<li><strong>one transaction per request</strong>, committed before the response is sent,
+  plus <code>atomic()</code> and <code>on_commit()</code>;</li>
+<li>a <strong>test harness</strong>: isolated test database built from your migrations, each
+  test rolled back;</li>
+<li>a <strong>CLI</strong>: <code>startproject</code>, <code>startapp --crud</code>, <code>createsuperuser</code>, <code>shell</code>, <code>check</code>;</li>
+<li>optional <strong>auth</strong> (JWT, Django-compatible password hashes), <strong>admin</strong>
+  (SQLAdmin) and <strong>WebSocket</strong> fan-out.</li>
+</ul>
+<pre><code class="language-python">class Event(TimestampedModel):
+    title = CharField(max_length=200)
+    starts_at = DateTimeField()
+    instructor_id = ForeignKey(User, on_delete=CASCADE)
+    instructor: Mapped[User] = relationship()
+
+
+class EventRead(ModelSchema, model=Event):          # API schema generated from the model
+    pass
+
+
+@router.get(&quot;/events&quot;, response_model=Page[EventRead])
+async def list_events(params: PageParams = Depends(), q: str | None = None):
+    events = Event.objects.filter(starts_at__gte=utcnow()).order_by(&quot;starts_at&quot;)
+    if q:
+        events = events.filter(Q(title__icontains=q) | Q(instructor__full_name__icontains=q))
+    return await events.prefetch(&quot;instructor&quot;).paginate(params)
+
+
+@router.post(&quot;/events/{event_id}/registrations&quot;, status_code=201)
+async def register(event_id: int, student: Student):
+    event = await Event.objects.get(id=event_id)                # 404 if missing
+    registration = await Registration.objects.create(event_id=event.id, student_id=student.id)
+    on_commit(lambda: send_confirmation.delay(registration.id))  # only if the request commits
+    return registration                                          # duplicate -&gt; 409 (unique constraint)
+</code></pre>
+<p>Every model is a real SQLAlchemy model and every QuerySet a real <code>select()</code>
+(<code>qs.statement</code>), so everything SQLAlchemy can do is still one line away.
+Generated projects pass ruff and mypy out of the box.</p>
+<p><strong>Is it for you?</strong> If you want Django itself, use Django with
+<a href="https://django-ninja.dev/">Django Ninja</a>. fastapi-mvt is for teams on FastAPI
+and SQLAlchemy who want Django's conveniences there. See the
+<a href="#comparison">comparison</a>.</p>
+<h2 id="overview--quick-start">Quick start</h2>
+<pre><code class="language-bash">pip install &quot;fastapi-mvt[auth,server,test]&quot;
+fastapi-mvt startproject shop
+cd shop
+pip install -e &quot;.[test]&quot;
+python manage.py startapp catalog --crud Product    # model + schemas + CRUD router + tests
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver                          # http://127.0.0.1:8000/docs
+pytest
+</code></pre>
+<h2 id="overview--documentation">Documentation</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="#tutorial"><strong>Tutorial</strong></a></td>
+<td>Build an eLearning API step by step, from an empty folder to production</td>
+</tr>
+<tr>
+<td><a href="#orm">ORM guide</a></td>
+<td>Models, relationships, queries, transactions, schemas, pagination</td>
+</tr>
+<tr>
+<td><a href="#migrations">Migrations guide</a></td>
+<td>Commands, safety checks, teams, production</td>
+</tr>
+<tr>
+<td><a href="#testing">Testing guide</a></td>
+<td><code>client</code> / <code>db</code> fixtures, test databases</td>
+</tr>
+<tr>
+<td><a href="#auth-and-admin">Auth and admin</a></td>
+<td>Users, tokens, permissions, the admin site</td>
+</tr>
+<tr>
+<td><a href="#deployment">Deployment</a></td>
+<td>Settings, release steps, Docker, background jobs</td>
+</tr>
+<tr>
+<td><a href="#cli">Command line</a></td>
+<td>Every command, and writing your own</td>
+</tr>
+<tr>
+<td><a href="#comparison">Comparison</a></td>
+<td>vs Django Ninja, SQLModel, the full-stack template, plain SQLAlchemy</td>
+</tr>
+<tr>
+<td><a href="#design">Design notes</a></td>
+<td>Why it's built this way</td>
+</tr>
+<tr>
+<td><a href="#upgrading-from-0.1">Upgrading from 0.1</a></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>The <a href="https://github.com/OdaiAhmed99/fastapi-mvt-showcase">showcase repository</a>
+is the tutorial's finished app.</p>
+<h2 id="overview--commands">Commands</h2>
+<p>The full documentation is at <strong><a href="https://odaiahmed99.github.io/fastapi-mvt/">https://odaiahmed99.github.io/fastapi-mvt/</a></strong> (built from <code>docs/</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startproject &lt;name&gt;</code> / <code>startapp &lt;name&gt; [--crud Model]</code></td>
+<td>scaffold (never overwrites files)</td>
+</tr>
+<tr>
+<td><code>makemigrations</code> / <code>migrate [target]</code> / <code>showmigrations</code> / <code>rollback</code> / <code>sqlmigrate</code></td>
+<td>migrations</td>
+</tr>
+<tr>
+<td><code>runserver</code> / <code>shell</code> / <code>routes</code> / <code>createsuperuser</code></td>
+<td>development</td>
+</tr>
+<tr>
+<td><code>check</code></td>
+<td>CI: config, models, pending or missing migrations</td>
+</tr>
+<tr>
+<td>your own</td>
+<td>any app's <code>commands.py</code> adds <code>manage.py</code> commands (<a href="#cli">CLI</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="overview--installation-extras">Installation extras</h2>
+<table>
+<thead>
+<tr>
+<th>Extra</th>
+<th>Adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(core)</td>
+<td>FastAPI, SQLAlchemy 2 (async), Alembic, pydantic-settings, SQLite driver</td>
+</tr>
+<tr>
+<td><code>postgres</code></td>
+<td>asyncpg</td>
+</tr>
+<tr>
+<td><code>mysql</code></td>
+<td>aiomysql (experimental: not covered by the test suite yet)</td>
+</tr>
+<tr>
+<td><code>auth</code></td>
+<td>PyJWT, python-multipart</td>
+</tr>
+<tr>
+<td><code>admin</code></td>
+<td>SQLAdmin</td>
+</tr>
+<tr>
+<td><code>redis</code></td>
+<td>multi-process WebSockets</td>
+</tr>
+<tr>
+<td><code>server</code></td>
+<td>uvicorn</td>
+</tr>
+<tr>
+<td><code>test</code></td>
+<td>pytest, pytest-asyncio, httpx</td>
+</tr>
+</tbody>
+</table>
+<p>Python 3.10+. Tested on SQLite and PostgreSQL 16.</p>
+<h2 id="overview--development">Development</h2>
+<pre><code class="language-bash">pip install -e &quot;.[dev]&quot;
+pytest                                   # SQLite
+TEST_DATABASE_URL=postgresql://user:pass@localhost/mvt pytest   # PostgreSQL
+pytest -m &quot;not slow&quot;                     # skip the end-to-end CLI tests
+</code></pre>
+<p>MIT licensed.</p></article>
+<article class="page" id="tutorial" data-label="Tutorial" hidden><h1 id="tutorial--tutorial-build-an-elearning-api">Tutorial: build an eLearning API</h1>
+<p>In this tutorial you build a real API from an empty folder: students and
+instructors, events, registrations and live "like" counts. Along the way you
+use every everyday feature of fastapi-mvt:</p>
+<table>
+<thead>
+<tr>
+<th>Part</th>
+<th>You learn</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1. Create the project</td>
+<td><code>startproject</code>, settings, the first migration</td>
+</tr>
+<tr>
+<td>2. Users and roles</td>
+<td>extending the user model, enum fields, sign-up</td>
+</tr>
+<tr>
+<td>3. Your first app</td>
+<td><code>startapp</code>, models, relationships, foreign keys</td>
+</tr>
+<tr>
+<td>4. Migrations</td>
+<td><code>makemigrations</code>, <code>migrate</code>, going backwards</td>
+</tr>
+<tr>
+<td>5. Schemas</td>
+<td><code>ModelSchema</code>, validation</td>
+</tr>
+<tr>
+<td>6. Endpoints</td>
+<td>queries, pagination, 404/409 handling</td>
+</tr>
+<tr>
+<td>7. Business rules</td>
+<td>a service layer, permissions, transactions</td>
+</tr>
+<tr>
+<td>8. Real-time likes</td>
+<td><code>on_commit</code>, WebSockets</td>
+</tr>
+<tr>
+<td>9. Tests</td>
+<td>the <code>client</code> / <code>db</code> fixtures</td>
+</tr>
+<tr>
+<td>10. Changing the schema safely</td>
+<td>renames, NOT NULL columns, deletions</td>
+</tr>
+<tr>
+<td>11. Admin and production</td>
+<td>admin site, PostgreSQL, deployment</td>
+</tr>
+</tbody>
+</table>
+<p>The finished code is the <a href="https://github.com/OdaiAhmed99/fastapi-mvt-showcase">fastapi-mvt-showcase</a>
+repository. Every snippet below comes from it and is covered by its tests.</p>
+<p><strong>You need</strong> Python 3.10+ and basic FastAPI knowledge. Knowing Django helps (the
+commands are the same) but is not required. You do <strong>not</strong> need to know SQLAlchemy.</p>
+<hr />
+<h2 id="tutorial--the-finished-project">The finished project</h2>
+<p>This is the complete eLearning project you'll have at the end: about 580 lines
+of your own Python code. Files marked <em>(generated)</em> come from <code>startproject</code> or
+<code>startapp</code> and are left as they are; the rest you write in the part shown.</p>
+<pre><code class="language-text">elearning/                          ← project root (run every command from here)
+│
+├── manage.py                       (generated) `python manage.py &lt;command&gt;`
+├── pyproject.toml                  (generated) dependencies + [tool.fastapi-mvt] config
+├── .env                            (generated) local settings + SECRET_KEY — never committed
+├── .env.example                    (generated) the settings template you do commit
+├── .gitignore                      (generated)
+├── README.md
+│
+├── elearning/                      ← project package: wiring only, no business logic
+│   ├── __init__.py
+│   ├── settings.py                 (generated) typed settings from env vars / .env
+│   ├── db.py                       (generated) db = Database(settings.database_url)
+│   ├── main.py                     (generated) FastAPI app, db.init_app(app), routers  · part 1, 3
+│   ├── auth.py                     Auth setup, CurrentUser / Instructor / Student types · part 2
+│   └── websocket.py                the shared ConnectionManager                        · part 8
+│
+├── users/                          ← app: accounts
+│   ├── __init__.py
+│   ├── models.py                   User(AbstractUser) + Role enum                      · part 2
+│   └── schemas.py                  SignUp (register payload), UserSummary              · part 2
+│
+├── events/                         ← app: the eLearning domain
+│   ├── __init__.py
+│   ├── models.py                   Event, Registration, Like                           · part 3
+│   ├── schemas.py                  EventCreate/Update/Read, Attendee, Like*            · part 5
+│   ├── services.py                 business rules: ownership, registration, likes      · part 7, 8
+│   └── router.py                   HTTP + WebSocket endpoints under /events            · part 6, 7, 8
+│
+├── migrations/                     ← created by the first `makemigrations`
+│   ├── env.py                      (generated) 2 lines, calls fastapi-mvt — don't edit
+│   ├── script.py.mako              (generated) template for new migration files
+│   ├── README                      (generated)
+│   └── versions/                   your schema history — commit these files
+│       ├── 0001_initial.py                     users table                             · part 1
+│       ├── 0002_users_role.py                  users.role column                       · part 2
+│       └── 0003_create_events_and_more.py      events, registrations, likes            · part 4
+│
+└── tests/
+    ├── test_api.py                 (generated) health check + sign-up/login flow
+    └── test_events.py              permissions, validation, registrations, likes      · part 9
+</code></pre>
+<blockquote>
+<p>The showcase repository was built in one go, so its <code>migrations/versions/</code> holds
+a single <code>0001_initial.py</code> with all four tables. Following this tutorial step by
+step gives you the three migrations shown above. Both are correct: migrations
+record <em>how</em> you got to a schema.</p>
+</blockquote>
+<h3 id="tutorial--how-the-pieces-fit-together">How the pieces fit together</h3>
+<p><strong>An app is a package with a <code>models.py</code>.</strong> <code>users/</code> and <code>events/</code> are apps.
+Every package with a <code>models.py</code> is picked up automatically by migrations and
+tests (<code>models = "auto"</code> in <code>pyproject.toml</code>). Routers are included explicitly in
+<code>main.py</code>, so you can always see which endpoints exist.</p>
+<p><strong>Each file in an app has one job:</strong></p>
+<table>
+<thead>
+<tr>
+<th>File</th>
+<th>Contains</th>
+<th>Talks to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>models.py</code></td>
+<td>tables: fields, foreign keys, relationships</td>
+<td>the database (via the ORM)</td>
+</tr>
+<tr>
+<td><code>schemas.py</code></td>
+<td>what the API accepts and returns</td>
+<td>nothing (pure validation)</td>
+</tr>
+<tr>
+<td><code>services.py</code></td>
+<td>rules: who may do what, what must be true</td>
+<td>models</td>
+</tr>
+<tr>
+<td><code>router.py</code></td>
+<td>endpoints: parse the request, call a service, return a schema</td>
+<td>services, schemas</td>
+</tr>
+</tbody>
+</table>
+<p>Small apps can skip <code>services.py</code> and query models straight from the router, as
+the <code>startapp --crud</code> template does. Add it once rules appear.</p>
+<p><strong>What happens on <code>POST /events/7/registrations</code>:</strong></p>
+<pre><code class="language-text">request
+  → elearning/main.py        db.init_app: open a transaction for this request
+  → events/router.py         register(event_id=7, student: Student)
+      → elearning/auth.py    Student dependency: valid token? role == student? (401 / 403)
+  → events/services.py       register(): event exists? (404) not your own event? (400)
+      → events/models.py     Registration.objects.create(...)  — duplicate? (409, unique constraint)
+  → events/schemas.py        RegistrationRead shapes the JSON response
+  → elearning/main.py        commit, then send 201 — or roll back everything on any error
+</code></pre>
+<p>Now let's build it.</p>
+<hr />
+<h2 id="tutorial--1-create-the-project">1. Create the project</h2>
+<pre><code class="language-bash">pip install &quot;fastapi-mvt[auth,server,test]&quot;
+fastapi-mvt startproject elearning
+cd elearning
+python -m venv .venv
+source .venv/bin/activate          # Windows: .venv\Scripts\activate
+pip install -e &quot;.[test]&quot;
+</code></pre>
+<p>You now have:</p>
+<pre class="output"><code>elearning/
+├── manage.py              # python manage.py &lt;command&gt;, like Django
+├── pyproject.toml         # dependencies + [tool.fastapi-mvt] config
+├── .env                   # local settings, with a generated SECRET_KEY (git-ignored)
+├── .env.example
+├── elearning/
+│   ├── settings.py        # typed settings from env vars / .env
+│   ├── db.py              # db = Database(settings.database_url)
+│   ├── auth.py            # JWT auth + the CurrentUser type
+│   └── main.py            # the FastAPI app
+├── users/
+│   └── models.py          # your User model
+└── tests/
+    └── test_api.py
+</code></pre>
+<p>Open <code>elearning/main.py</code>. It is ordinary FastAPI with one extra line:</p>
+<pre><code class="language-python">app = FastAPI(title=&quot;elearning&quot;, debug=settings.debug)
+
+# One transaction per request, ORM errors mapped to 404 / 409.
+db.init_app(app)
+</code></pre>
+<p>That line gives every request its own database transaction. It commits when
+your endpoint returns successfully and rolls back if the endpoint raises. More on
+that in part 7.</p>
+<p>Create the database tables and start the server:</p>
+<pre><code class="language-bash">python manage.py makemigrations     # writes migrations/versions/0001_initial.py
+python manage.py migrate
+python manage.py runserver
+</code></pre>
+<p>Open <a href="http://127.0.0.1:8000/docs">http://127.0.0.1:8000/docs</a>. Sign-up, login, refresh, logout and <code>/auth/me</code>
+already work. Click <strong>Authorize</strong> to log in from the docs page.</p>
+<blockquote>
+<p><strong>Where is the database?</strong> By default it's a SQLite file, <code>db.sqlite3</code>, in the
+project folder. Set <code>DATABASE_URL=postgresql://user:pass@host/dbname</code> in <code>.env</code>
+to use PostgreSQL; nothing else changes (see part 11).</p>
+</blockquote>
+<hr />
+<h2 id="tutorial--2-users-and-roles">2. Users and roles</h2>
+<p>Our platform has students and instructors. Open <code>users/models.py</code> and add a role:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Users of the platform: students, instructors and admins.&quot;&quot;&quot;
+
+import enum
+
+from fastapi_mvt.auth import AbstractUser
+from fastapi_mvt.db import CharField, EnumField, TimestampedModel
+
+
+class Role(str, enum.Enum):
+    STUDENT = &quot;student&quot;
+    INSTRUCTOR = &quot;instructor&quot;
+    ADMIN = &quot;admin&quot;
+
+
+class User(AbstractUser, TimestampedModel):
+    # Provided by AbstractUser: email, password (hashed), is_active, is_superuser, last_login.
+    full_name = CharField(max_length=150, null=True)
+    role = EnumField(Role, default=Role.STUDENT)
+</code></pre>
+<p>Fields read like Django's:</p>
+<ul>
+<li><code>CharField(max_length=150, null=True)</code> is a VARCHAR(150) that may be empty.
+  Fields are required (NOT NULL) unless you pass <code>null=True</code>, as in Django.</li>
+<li><code>EnumField(Role, default=Role.STUDENT)</code> stores the enum's value (<code>"student"</code>)
+  in a text column, like Django <code>choices</code>.</li>
+<li>Others: <code>TextField</code>, <code>IntegerField</code>, <code>DecimalField</code>, <code>BooleanField</code>,
+  <code>DateTimeField(auto_now_add=True)</code>, <code>DateField</code>, <code>EmailField</code>, <code>SlugField</code>,
+  <code>UUIDField</code>, <code>JSONField</code>, <code>ForeignKey</code> (see the <a href="#orm--defining-models">ORM guide</a>).</li>
+<li><code>TimestampedModel</code> adds <code>id</code>, <code>created_at</code> and <code>updated_at</code>. Use <code>Model</code> for
+  just an <code>id</code>.</li>
+</ul>
+<p>Under the hood each field is a normal SQLAlchemy column, and your editor knows
+<code>user.full_name</code> is <code>str | None</code>. If you prefer SQLAlchemy's own spelling,
+<code>full_name: Mapped[Optional[str]] = mapped_column(String(150))</code> means exactly
+the same, and you can mix both styles.</p>
+<h3 id="tutorial--sign-up-with-a-role">Sign-up with a role</h3>
+<p>The built-in <code>/auth/register</code> accepts <code>email</code> and <code>password</code>. To accept more
+fields, give it your own schema. Create <code>users/schemas.py</code>:</p>
+<pre><code class="language-python">from typing import Optional
+
+from pydantic import Field
+
+from fastapi_mvt.auth import RegisterRequest
+from fastapi_mvt.db import Schema
+from users.models import Role
+
+
+class SignUp(RegisterRequest):
+    &quot;&quot;&quot;Registration payload: the default email/password plus our own fields.&quot;&quot;&quot;
+
+    full_name: Optional[str] = Field(default=None, max_length=150)
+    # Admins are created with `manage.py createsuperuser`, never through sign-up.
+    role: Role = Field(default=Role.STUDENT, description=&quot;student or instructor&quot;)
+
+
+class UserSummary(Schema):
+    id: int
+    email: str
+    full_name: Optional[str]
+</code></pre>
+<p>Then replace <code>elearning/auth.py</code>. We customise sign-up by overriding one method
+and add role-based permissions as reusable types:</p>
+<pre><code class="language-python">from typing import Annotated
+
+from fastapi import Depends, HTTPException, status
+from pydantic import BaseModel
+
+from elearning.settings import settings
+from fastapi_mvt.auth import Auth
+from users.models import Role, User
+from users.schemas import SignUp
+
+
+class ElearningAuth(Auth):
+    async def create_user(self, data: BaseModel) -&gt; User:
+        if getattr(data, &quot;role&quot;, Role.STUDENT) is Role.ADMIN:
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=&quot;Admins cannot sign up.&quot;)
+        return await super().create_user(data)
+
+
+auth = ElearningAuth(
+    User,
+    secret_key=settings.secret_key,
+    access_token_minutes=settings.access_token_minutes,
+    refresh_token_days=settings.refresh_token_days,
+    register_schema=SignUp,
+)
+
+CurrentUser = Annotated[User, Depends(auth.current_user)]
+
+
+def require_role(role: Role):
+    async def dependency(user: CurrentUser) -&gt; User:
+        if user.role is not role and not user.is_superuser:
+            raise HTTPException(status.HTTP_403_FORBIDDEN, detail=f&quot;Only {role.value}s can do this.&quot;)
+        return user
+
+    return dependency
+
+
+Instructor = Annotated[User, Depends(require_role(Role.INSTRUCTOR))]
+Student = Annotated[User, Depends(require_role(Role.STUDENT))]
+</code></pre>
+<p>Any endpoint can now say <code>user: Instructor</code>, and FastAPI returns 401 for
+anonymous users and 403 for students. That is plain FastAPI dependency
+injection; fastapi-mvt adds no second system.</p>
+<p>The model changed, so record the change:</p>
+<pre><code class="language-bash">python manage.py makemigrations
+</code></pre>
+<pre class="output"><code>Migrations:
+  migrations/versions/0002_users_role.py
+    - Add column role to users
+</code></pre>
+<pre><code class="language-bash">python manage.py migrate
+</code></pre>
+<hr />
+<h2 id="tutorial--3-your-first-app-events">3. Your first app: events</h2>
+<pre><code class="language-bash">python manage.py startapp events
+</code></pre>
+<p>This creates <code>events/</code> (models, schemas, router) and a test file, and registers
+the router in <code>elearning/main.py</code> for you. Nothing is discovered by magic at
+runtime: open <code>main.py</code> and you'll see the two lines it added.</p>
+<p>Write the models in <code>events/models.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Events that instructors publish, and students register for and like.&quot;&quot;&quot;
+
+from fastapi_mvt.db import (
+    CASCADE,
+    CharField,
+    DateTimeField,
+    ForeignKey,
+    Mapped,
+    TextField,
+    TimestampedModel,
+    relationship,
+)
+from sqlalchemy import UniqueConstraint
+
+from users.models import User
+
+
+class Event(TimestampedModel):
+    title = CharField(max_length=200)
+    description = TextField(null=True)
+    location = CharField(max_length=255, null=True)
+    starts_at = DateTimeField()
+    ends_at = DateTimeField()
+    instructor_id = ForeignKey(User, on_delete=CASCADE)
+
+    instructor: Mapped[User] = relationship()
+    registrations: Mapped[list[&quot;Registration&quot;]] = relationship(back_populates=&quot;event&quot;)
+    likes: Mapped[list[&quot;Like&quot;]] = relationship(back_populates=&quot;event&quot;)
+
+
+class Registration(TimestampedModel):
+    # The database guarantees one registration per student and event, even under
+    # concurrent requests; a duplicate becomes a 409 automatically.
+    __table_args__ = (UniqueConstraint(&quot;event_id&quot;, &quot;student_id&quot;),)
+
+    event_id = ForeignKey(Event, on_delete=CASCADE)
+    student_id = ForeignKey(User, on_delete=CASCADE)
+
+    event: Mapped[Event] = relationship(back_populates=&quot;registrations&quot;)
+    student: Mapped[User] = relationship()
+
+
+class Like(TimestampedModel):
+    __table_args__ = (UniqueConstraint(&quot;event_id&quot;, &quot;user_id&quot;),)
+
+    event_id = ForeignKey(Event, on_delete=CASCADE)
+    user_id = ForeignKey(User, on_delete=CASCADE)
+    reaction = CharField(max_length=30, default=&quot;like&quot;)
+
+    event: Mapped[Event] = relationship(back_populates=&quot;likes&quot;)
+</code></pre>
+<p>What's new:</p>
+<ul>
+<li><strong><code>ForeignKey(Model, on_delete=...)</code></strong> declares the foreign-key column
+  (<code>instructor_id</code>). <code>on_delete</code> is required, as in Django: <code>CASCADE</code>, <code>SET_NULL</code>, <code>PROTECT</code>/<code>RESTRICT</code>. The <em>database</em>
+  enforces it (SQLite included), so deleting an event deletes its registrations
+  even when you delete in bulk.</li>
+<li><strong><code>relationship()</code></strong> gives Python access to related rows:
+  <code>registration.event</code>, <code>event.registrations</code>. Relationships are <strong>never loaded
+  behind your back</strong>. You ask for them in the query (<code>.prefetch("student")</code>)
+  or on an object (<code>await event.load("registrations")</code>). Forgetting raises a
+  clear error naming the attribute instead of silently running one query per
+  row (the classic N+1 problem).</li>
+<li>Table names come from the class: <code>Event</code> → <code>events</code>,
+  <code>Registration</code> → <code>registrations</code>. Set <code>__tablename__</code> to choose your own.</li>
+</ul>
+<hr />
+<h2 id="tutorial--4-migrations">4. Migrations</h2>
+<pre><code class="language-bash">python manage.py makemigrations
+</code></pre>
+<pre class="output"><code>Migrations:
+  migrations/versions/0003_create_events_and_more.py
+    - Create table events
+    - Create index ix_events_instructor_id on events
+    - Create table likes
+    ...
+</code></pre>
+<pre><code class="language-bash">python manage.py migrate
+</code></pre>
+<pre class="output"><code>Running migrations:
+  Applying 0003_create_events_and_more... OK
+</code></pre>
+<p>Migration files are plain Alembic scripts in <code>migrations/versions/</code>. Read them,
+commit them, edit them if you need to. The commands you'll use:</p>
+<pre><code class="language-bash">python manage.py showmigrations      # [X] applied, [ ] pending
+python manage.py migrate 0002        # go back to 0002 (unapplies 0003)
+python manage.py migrate             # forward to the latest again
+python manage.py rollback            # undo the last migration
+python manage.py sqlmigrate 0003     # print the SQL (PostgreSQL)
+</code></pre>
+<p>Like Django, <code>makemigrations</code> compares your models with your <em>migration files</em>
+(it replays them into a temporary database), not with your development
+database, so you don't need to <code>migrate</code> first, and manual changes to your dev
+database never sneak into a migration. Part 10 shows the safety checks it performs.</p>
+<hr />
+<h2 id="tutorial--5-schemas-what-the-api-accepts-and-returns">5. Schemas: what the API accepts and returns</h2>
+<p>Your models describe the database; <strong>schemas</strong> describe the API. Keeping them
+separate is what stops <code>password</code> hashes or internal fields from leaking out.
+<code>ModelSchema</code> builds a pydantic schema from a model's columns (types, lengths,
+optional fields) so you don't repeat yourself; fields you declare yourself win.</p>
+<p><code>events/schemas.py</code>:</p>
+<pre><code class="language-python">&quot;&quot;&quot;Request and response schemas for events.&quot;&quot;&quot;
+
+from datetime import datetime
+
+from fastapi_mvt.db import ModelSchema, Schema
+from pydantic import Field, model_validator
+
+from events.models import Event, Like, Registration
+from users.schemas import UserSummary
+
+
+class EventCreate(ModelSchema, model=Event, mode=&quot;create&quot;, exclude=[&quot;instructor_id&quot;]):
+    title: str = Field(min_length=3, max_length=200)
+
+    @model_validator(mode=&quot;after&quot;)
+    def ends_after_start(self) -&gt; &quot;EventCreate&quot;:
+        if self.ends_at &lt;= self.starts_at:
+            raise ValueError(&quot;ends_at must be later than starts_at&quot;)
+        return self
+
+
+class EventUpdate(ModelSchema, model=Event, mode=&quot;update&quot;, exclude=[&quot;instructor_id&quot;]):
+    pass
+
+
+class EventRead(ModelSchema, model=Event):
+    pass
+
+
+class RegistrationRead(ModelSchema, model=Registration):
+    pass
+
+
+class Attendee(Schema):
+    registration_id: int
+    registered_at: datetime
+    student: UserSummary
+
+
+class LikeIn(Schema):
+    reaction: str = Field(default=&quot;like&quot;, min_length=1, max_length=30)
+
+
+class LikeRead(ModelSchema, model=Like):
+    pass
+
+
+class LikeCount(Schema):
+    event_id: int
+    count: int
+</code></pre>
+<p>The three modes:</p>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Contains</th>
+<th>Use for</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"read"</code> (default)</td>
+<td>every public column</td>
+<td>responses</td>
+</tr>
+<tr>
+<td><code>"create"</code></td>
+<td>what a client may set: no <code>id</code>, no timestamps; fields with defaults optional</td>
+<td>POST bodies</td>
+</tr>
+<tr>
+<td><code>"update"</code></td>
+<td>like create, but everything optional</td>
+<td>PATCH bodies</td>
+</tr>
+</tbody>
+</table>
+<p>Columns declared with <code>private(...)</code>, like the user's password hash, never appear
+in any mode. Declaring a field yourself tightens its rules (<code>min_length=3</code> above),
+and validators work as on any pydantic model. Type checkers understand the
+<code>class X(ModelSchema, model=Event)</code> form, so mypy and your editor stay happy.</p>
+<hr />
+<h2 id="tutorial--6-endpoints">6. Endpoints</h2>
+<p><code>events/router.py</code>. Read it top to bottom; there's no session handling anywhere:</p>
+<pre><code class="language-python">from datetime import datetime, timezone
+
+from fastapi import APIRouter, Depends, status
+
+from elearning.auth import CurrentUser, Instructor, Student
+from events import services
+from events.models import Event, Registration
+from events.schemas import Attendee, EventCreate, EventRead, EventUpdate, RegistrationRead
+from fastapi_mvt.db import Page, PageParams
+from users.schemas import UserSummary
+
+router = APIRouter(prefix=&quot;/events&quot;, tags=[&quot;events&quot;])
+
+
+@router.get(&quot;&quot;, response_model=Page[EventRead])
+async def list_events(params: PageParams = Depends(), q: str | None = None, upcoming: bool = False):
+    events = Event.objects.order_by(&quot;starts_at&quot;)
+    if q:
+        events = events.filter(title__icontains=q)
+    if upcoming:
+        events = events.filter(starts_at__gte=datetime.now(timezone.utc))
+    return await events.paginate(params)
+
+
+@router.post(&quot;&quot;, response_model=EventRead, status_code=status.HTTP_201_CREATED)
+async def create_event(data: EventCreate, instructor: Instructor):
+    return await Event.objects.create(**data.model_dump(), instructor_id=instructor.id)
+
+
+@router.get(&quot;/{event_id}&quot;, response_model=EventRead)
+async def get_event(event_id: int):
+    return await Event.objects.get(id=event_id)
+</code></pre>
+<p>Things to notice:</p>
+<ul>
+<li><strong>Queries read like Django.</strong> <code>Event.objects.filter(title__icontains=q)</code> builds
+  a query; <code>await</code> runs it. QuerySets are immutable, so building them
+  conditionally (as above) is safe.</li>
+<li><strong><code>.get()</code> returns 404 by itself.</strong> It raises <code>Event.DoesNotExist</code>, which
+  <code>db.init_app</code> maps to a 404 response. No <code>if not event: raise HTTPException</code>.</li>
+<li><strong><code>paginate(params)</code></strong> returns <code>Page[...]</code>:
+  <code>{"items": [...], "total": 42, "page": 1, "size": 20, "pages": 3, "has_next": true, ...}</code>.
+  <code>?page=</code> and <code>?size=</code> are validated, with size capped at 100.</li>
+</ul>
+<p>The query API in one table (full reference in <a href="#orm">orm.md</a>):</p>
+<table>
+<thead>
+<tr>
+<th>Django</th>
+<th>fastapi-mvt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Event.objects.all()</code></td>
+<td><code>await Event.objects.all()</code></td>
+</tr>
+<tr>
+<td><code>.filter(title__icontains="sql", starts_at__gte=now)</code></td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>.exclude(location=None)</code></td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>.filter(Q(a=1) \| Q(b=2))</code></td>
+<td>same (<code>from fastapi_mvt.db import Q</code>)</td>
+</tr>
+<tr>
+<td><code>.filter(event__instructor__email="x")</code></td>
+<td>same (spans relations)</td>
+</tr>
+<tr>
+<td><code>.order_by("-starts_at")[:10]</code></td>
+<td>same</td>
+</tr>
+<tr>
+<td><code>.get(id=1)</code> / <code>.first()</code> / <code>.count()</code> / <code>.exists()</code></td>
+<td><code>await ...</code></td>
+</tr>
+<tr>
+<td><code>.select_related("event")</code> / <code>.prefetch_related("likes")</code></td>
+<td>same, or <code>.prefetch("likes")</code></td>
+</tr>
+<tr>
+<td><code>.values("id", "title")</code> / <code>.values_list("id", flat=True)</code></td>
+<td><code>await ...</code></td>
+</tr>
+<tr>
+<td><code>.update(seats=F("seats") - 1)</code></td>
+<td><code>.update(seats=Event.seats - 1)</code> (a plain SQLAlchemy expression)</td>
+</tr>
+<tr>
+<td><code>.create(...)</code>, <code>.get_or_create(...)</code>, <code>.update_or_create(...)</code>, <code>.bulk_create([...])</code></td>
+<td><code>await ...</code></td>
+</tr>
+<tr>
+<td><code>obj.save()</code> / <code>obj.delete()</code> / <code>obj.refresh_from_db()</code></td>
+<td><code>await obj.save()</code> / <code>await obj.delete()</code> / <code>await obj.refresh()</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="tutorial--7-business-rules-and-transactions">7. Business rules and transactions</h2>
+<p>Rules like "only the owner may edit" belong in a plain module, not in the HTTP
+layer. <code>events/services.py</code>:</p>
+<pre><code class="language-python">from fastapi import HTTPException, status
+
+from events.models import Event, Like, Registration
+from users.models import User
+
+
+def _forbidden(detail: str) -&gt; HTTPException:
+    return HTTPException(status.HTTP_403_FORBIDDEN, detail=detail)
+
+
+async def get_own_event(event_id: int, instructor: User) -&gt; Event:
+    event = await Event.objects.get(id=event_id)  # 404 if missing
+    if event.instructor_id != instructor.id:
+        raise _forbidden(&quot;You can only manage your own events.&quot;)
+    return event
+
+
+async def update_event(event: Event, changes: dict) -&gt; Event:
+    starts_at = changes.get(&quot;starts_at&quot;, event.starts_at)
+    ends_at = changes.get(&quot;ends_at&quot;, event.ends_at)
+    if ends_at &lt;= starts_at:
+        raise HTTPException(status.HTTP_422_UNPROCESSABLE_ENTITY, detail=&quot;ends_at must be later than starts_at&quot;)
+    return await event.update(**changes)
+
+
+async def register(event_id: int, student: User) -&gt; Registration:
+    event = await Event.objects.get(id=event_id)
+    if event.instructor_id == student.id:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, detail=&quot;You cannot register for your own event.&quot;)
+    # No &quot;already registered?&quot; query: the unique constraint makes a duplicate a 409,
+    # which is also correct when two requests race.
+    return await Registration.objects.create(event_id=event.id, student_id=student.id)
+</code></pre>
+<p>And the endpoints that use them:</p>
+<pre><code class="language-python">@router.patch(&quot;/{event_id}&quot;, response_model=EventRead)
+async def update_event(event_id: int, data: EventUpdate, instructor: Instructor):
+    event = await services.get_own_event(event_id, instructor)
+    return await services.update_event(event, data.model_dump(exclude_unset=True))
+
+
+@router.delete(&quot;/{event_id}&quot;, status_code=status.HTTP_204_NO_CONTENT)
+async def delete_event(event_id: int, instructor: Instructor) -&gt; None:
+    event = await services.get_own_event(event_id, instructor)
+    await event.delete()  # registrations and likes go with it (on_delete=CASCADE)
+
+
+@router.post(&quot;/{event_id}/registrations&quot;, response_model=RegistrationRead, status_code=status.HTTP_201_CREATED)
+async def register(event_id: int, student: Student):
+    return await services.register(event_id, student)
+
+
+@router.get(&quot;/{event_id}/registrations&quot;, response_model=list[Attendee])
+async def attendees(event_id: int, instructor: Instructor):
+    await services.get_own_event(event_id, instructor)
+    registrations = await (
+        Registration.objects.filter(event_id=event_id).prefetch(&quot;student&quot;).order_by(&quot;-created_at&quot;)
+    )
+    return [
+        Attendee(registration_id=r.id, registered_at=r.created_at, student=UserSummary.model_validate(r.student))
+        for r in registrations
+    ]
+</code></pre>
+<h3 id="tutorial--how-transactions-work-the-one-rule-to-remember">How transactions work (the one rule to remember)</h3>
+<p><strong>Inside a request, everything is one transaction.</strong> It commits right before
+the response is sent, and rolls back if the endpoint raises, including an
+<code>HTTPException</code>, or returns an error status. So if a service writes two rows and
+then raises <code>403</code>, neither row is saved. The client never receives a success
+response for data that failed to commit.</p>
+<p>Need a smaller unit inside a request? Use <code>atomic()</code>, which creates a savepoint:</p>
+<pre><code class="language-python">from fastapi_mvt.db import atomic
+
+async with atomic():
+    order = await Order.objects.create(...)
+    await Stock.objects.filter(id=item_id).update(quantity=Stock.quantity - 1)
+</code></pre>
+<p>Outside requests (scripts, the shell, background tasks, WebSockets) each ORM call
+commits on its own, like Django. Wrap a block in <code>async with atomic():</code> to
+make it all-or-nothing.</p>
+<hr />
+<h2 id="tutorial--8-real-time-likes-with-websockets">8. Real-time likes with WebSockets</h2>
+<p>Likes use <code>update_or_create</code> (one row per user and event) and notify connected
+browsers. The important part is <strong><code>on_commit</code></strong>: it runs a callback only after
+the transaction commits. If the request fails, nobody is told about a like that
+never happened.</p>
+<p><code>elearning/websocket.py</code>:</p>
+<pre><code class="language-python">from fastapi_mvt.websockets import ConnectionManager
+
+manager = ConnectionManager()
+</code></pre>
+<p>Add to <code>events/services.py</code>:</p>
+<pre><code class="language-python">from elearning.websocket import manager
+from fastapi_mvt.db import on_commit
+
+
+async def like_count(event_id: int) -&gt; int:
+    return await Like.objects.filter(event_id=event_id).exclude(reaction=&quot;unlike&quot;).count()
+
+
+async def set_reaction(event_id: int, user: User, reaction: str) -&gt; Like:
+    await Event.objects.get(id=event_id)
+    like, _ = await Like.objects.update_or_create(event_id=event_id, user_id=user.id, defaults={&quot;reaction&quot;: reaction})
+    await _broadcast_likes(event_id)
+    return like
+
+
+async def remove_reaction(event_id: int, user: User) -&gt; None:
+    like = await Like.objects.get(event_id=event_id, user_id=user.id)
+    await like.delete()
+    await _broadcast_likes(event_id)
+
+
+async def _broadcast_likes(event_id: int) -&gt; None:
+    count = await like_count(event_id)
+    # Only tell websocket clients once the change is really committed.
+    on_commit(lambda: manager.send_to_group(group=f&quot;event:{event_id}&quot;, event=&quot;like_count&quot;, data={&quot;count&quot;: count}))
+</code></pre>
+<p>And the endpoints:</p>
+<pre><code class="language-python">@router.put(&quot;/{event_id}/like&quot;, response_model=LikeRead)
+async def like(event_id: int, user: CurrentUser, data: LikeIn | None = None):
+    return await services.set_reaction(event_id, user, data.reaction if data else &quot;like&quot;)
+
+
+@router.websocket(&quot;/{event_id}/likes/ws&quot;)
+async def live_likes(websocket: WebSocket, event_id: int):
+    await manager.connect(websocket, group=f&quot;event:{event_id}&quot;)
+    try:
+        await websocket.send_json({&quot;type&quot;: &quot;like_count&quot;, &quot;data&quot;: {&quot;count&quot;: await services.like_count(event_id)}})
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        pass
+    finally:
+        manager.disconnect(websocket)
+</code></pre>
+<p>A WebSocket may stay open for hours, so it does <strong>not</strong> hold a database
+transaction; each ORM call inside it runs in its own short transaction. To run
+several server processes, use <code>ConnectionManager(RedisChannelBackend(redis))</code>
+(<code>pip install "fastapi-mvt[redis]"</code>) and call <code>await manager.start()</code> at startup.</p>
+<hr />
+<h2 id="tutorial--9-tests">9. Tests</h2>
+<pre><code class="language-bash">pytest
+</code></pre>
+<p>fastapi-mvt gives you two fixtures, with no configuration:</p>
+<ul>
+<li><strong><code>client</code></strong>: an HTTP client for your app.</li>
+<li><strong><code>db</code></strong>: your database, inside a transaction that is rolled back after each
+  test. Tests never see each other's data. Every <code>async def</code> test gets this
+  automatically, even if it doesn't ask for <code>db</code>.</li>
+</ul>
+<p>The test database is separate from your development database. For SQLite it's a
+temporary file; for PostgreSQL, <code>&lt;name&gt;_test</code> is created and dropped, like Django
+does. It's built <strong>by running your migrations</strong>, so broken migrations fail your
+tests. If your models have changes without a migration, the run stops and tells you.</p>
+<p><code>tests/test_events.py</code> (excerpt):</p>
+<pre><code class="language-python">from datetime import datetime, timedelta, timezone
+
+import pytest
+
+from elearning.auth import auth
+from events.models import Registration
+from users.models import Role, User
+
+START = datetime.now(timezone.utc) + timedelta(days=7)
+EVENT = {&quot;title&quot;: &quot;Intro to SQL&quot;, &quot;starts_at&quot;: START.isoformat(),
+         &quot;ends_at&quot;: (START + timedelta(hours=2)).isoformat()}
+
+
+async def login_as(role: Role, email: str) -&gt; dict[str, str]:
+    user = await User.objects.create(email=email, password=&quot;!&quot;, role=role)
+    return {&quot;Authorization&quot;: f&quot;Bearer {auth.create_access_token(user)}&quot;}
+
+
+@pytest.fixture
+async def instructor(db):
+    return await login_as(Role.INSTRUCTOR, &quot;teacher@example.com&quot;)
+
+
+@pytest.fixture
+async def student(db):
+    return await login_as(Role.STUDENT, &quot;student@example.com&quot;)
+
+
+async def test_registration_rules(client, instructor, student):
+    event = (await client.post(&quot;/events&quot;, json=EVENT, headers=instructor)).json()
+    url = f&quot;/events/{event['id']}/registrations&quot;
+    assert (await client.post(url, headers=instructor)).status_code == 403
+    assert (await client.post(url, headers=student)).status_code == 201
+    assert (await client.post(url, headers=student)).status_code == 409   # unique constraint
+    assert await Registration.objects.count() == 1
+</code></pre>
+<p><code>password="!"</code> creates a user that cannot log in with a password, which is handy
+in tests where you mint a token directly.</p>
+<hr />
+<h2 id="tutorial--10-changing-the-schema-safely">10. Changing the schema safely</h2>
+<p>Plain Alembic writes whatever diff it finds, even one that destroys data.
+<code>makemigrations</code> checks the dangerous cases, as Django does.</p>
+<p><strong>Renaming a field.</strong> Rename <code>location</code> to <code>venue</code> in <code>Event</code> and run
+<code>makemigrations</code>:</p>
+<pre class="output"><code>Was events.location renamed to events.venue? [y/N]: y
+Migrations:
+  migrations/versions/0004_rename_events_location.py
+    - Rename column events.location to venue
+</code></pre>
+<p>On PostgreSQL, <code>python manage.py sqlmigrate 0004</code> shows exactly what will run:</p>
+<pre><code class="language-sql">ALTER TABLE events RENAME location TO venue;
+</code></pre>
+<p>Answer <em>no</em> and it becomes remove + add, which loses the data, so you're asked to
+confirm that too. Renaming a <strong>model class</strong> renames its table; you get the same
+question for the table.</p>
+<p><strong>Adding a required field to a table with data:</strong></p>
+<p>Add <code>capacity = IntegerField()</code> (required, no default) to <code>Event</code>:</p>
+<pre class="output"><code>Column events.capacity is NOT NULL with no database default. Existing rows in events need a value for it.
+Enter a one-off value for existing rows (a Python literal, e.g. 0, 'draft', True), or leave empty to quit: 30
+Migrations:
+  migrations/versions/0005_events_capacity.py
+    - Add column capacity to events
+    - Alter column events.capacity (server default)
+</code></pre>
+<p>The migration fills existing rows with <code>30</code>, then removes the temporary default,
+so your model stays the source of truth. Give the field a default instead
+(<code>IntegerField(default=30)</code>) and, like Django, that default fills existing rows
+without asking. Without a terminal (CI), a missing value is an error instead of
+a migration that would crash on <code>migrate</code>.</p>
+<p><strong>Deleting a model or field:</strong></p>
+<pre class="output"><code>These changes DELETE DATA:
+  - Drop table 'likes': it is in the database but no model defines it. If you did not
+    delete that model, make sure its module is a models.py inside an app package.
+Write this migration anyway? [y/N]:
+</code></pre>
+<p>In CI or scripts (no terminal), these questions become errors unless you pass
+<code>--allow-destructive</code>, so nothing destructive happens silently.</p>
+<p><strong>A broken import can't drop your tables.</strong> If a <code>models.py</code> fails to import,
+every command stops with the original error. Old versions skipped the module,
+which made its tables look deleted.</p>
+<p><strong>Working in a team.</strong> If two branches both add <code>0005_...</code>, <code>migrate</code> reports
+the conflict and <code>makemigrations --merge</code> joins them.</p>
+<p><strong>Data migrations.</strong> <code>python manage.py makemigrations --empty --name backfill_slugs</code>
+creates a migration with an example of updating rows.</p>
+<p>More: <a href="#migrations">migrations.md</a>.</p>
+<hr />
+<h2 id="tutorial--11-admin-and-production">11. Admin and production</h2>
+<h3 id="tutorial--admin-site">Admin site</h3>
+<pre><code class="language-bash">pip install &quot;fastapi-mvt[admin]&quot;
+python manage.py createsuperuser
+</code></pre>
+<p>In <code>main.py</code>:</p>
+<pre><code class="language-python">from fastapi_mvt.admin import setup_admin
+
+setup_admin(app, db, auth=auth)   # /admin, superusers only
+</code></pre>
+<p>Every model gets list/detail/edit pages (via <a href="https://aminalaee.dev/sqladmin/">SQLAdmin</a>).
+Password hashes are never shown.</p>
+<h3 id="tutorial--login-protection-and-password-reset">Login protection and password reset</h3>
+<p>Five wrong passwords in a row lock an account for 15 minutes
+(<code>Auth(..., max_failed_logins=5, lockout_minutes=15)</code>); the counter lives in the
+database, so it works across server processes. To add
+<code>/auth/password-reset</code>, pass a function that delivers the token:</p>
+<pre><code class="language-python">async def send_password_reset(user: User, token: str) -&gt; None:
+    await send_email(user.email, &quot;Reset your password&quot;, f&quot;https://app.example.com/reset?token={token}&quot;)
+
+auth = ElearningAuth(User, secret_key=settings.secret_key, send_password_reset=send_password_reset, ...)
+</code></pre>
+<h3 id="tutorial--postgresql">PostgreSQL</h3>
+<pre><code class="language-bash">pip install -e &quot;.[postgres]&quot;
+</code></pre>
+<pre><code class="language-ini"># .env
+DATABASE_URL=postgresql://elearning:secret@localhost:5432/elearning
+</code></pre>
+<p>Then run <code>python manage.py migrate</code>. The async driver is selected for you.</p>
+<h3 id="tutorial--deploying">Deploying</h3>
+<ol>
+<li>Set environment variables: <code>SECRET_KEY</code> (required; the app refuses to start
+   without it), <code>DATABASE_URL</code>, <code>ALLOWED_ORIGINS</code>, <code>DEBUG=false</code>.</li>
+<li>On each release, run <code>python manage.py migrate</code> <strong>before</strong> starting the new code.</li>
+<li>Start the server with several workers:
+   <code>uvicorn elearning.main:app --host 0.0.0.0 --port 8000 --workers 4</code>.</li>
+<li>In CI, run <code>python manage.py check</code> and <code>pytest</code>. <code>check</code> fails when
+   migrations are missing or unapplied.</li>
+</ol>
+<p>More: <a href="#deployment">deployment.md</a>.</p>
+<hr />
+<h2 id="tutorial--where-next">Where next</h2>
+<ul>
+<li><a href="#orm">ORM guide</a>: every query method, relationships, custom QuerySets, raw SQLAlchemy.</li>
+<li><a href="#migrations">Migrations guide</a>: commands, safety checks, teams, production.</li>
+<li><a href="#testing">Testing guide</a></li>
+<li><a href="#auth-and-admin">Auth and admin</a></li>
+<li><a href="#design">Design notes</a>: why fastapi-mvt is built this way.</li>
+</ul></article>
+<article class="page" id="orm" data-label="ORM guide" hidden><h1 id="orm--orm-guide">ORM guide</h1>
+<p>fastapi-mvt models are <strong>SQLAlchemy 2 models</strong> with a Django-style API on top.
+You get Django's everyday ergonomics without giving anything up: every model is
+a real SQLAlchemy mapped class, and every QuerySet is a real SQLAlchemy <code>select()</code>.</p>
+<pre><code class="language-python">from fastapi_mvt.db import Q, atomic, on_commit
+</code></pre>
+<ul>
+<li><a href="#orm--defining-models">Defining models</a></li>
+<li><a href="#orm--relationships">Relationships</a></li>
+<li><a href="#orm--querying">Querying</a></li>
+<li><a href="#orm--creating-updating-deleting">Creating, updating, deleting</a></li>
+<li><a href="#orm--transactions">Transactions</a></li>
+<li><a href="#orm--schemas">Schemas</a></li>
+<li><a href="#orm--pagination">Pagination</a></li>
+<li><a href="#orm--custom-querysets">Custom QuerySets</a></li>
+<li><a href="#orm--using-sqlalchemy-directly">Using SQLAlchemy directly</a></li>
+<li><a href="#orm--sync-code">Sync code</a></li>
+<li><a href="#orm--where-sessions-come-from">Where sessions come from</a></li>
+<li><a href="#orm--common-errors">Common errors</a></li>
+</ul>
+<hr />
+<h2 id="orm--defining-models">Defining models</h2>
+<pre><code class="language-python">from sqlalchemy import Text
+
+from fastapi_mvt.db import (
+    CASCADE, BooleanField, CharField, DateField, DecimalField, ForeignKey,
+    IntegerField, JSONField, SlugField, TextField, TimestampedModel, private,
+)
+
+
+class Product(TimestampedModel):
+    name = CharField(max_length=200, index=True)
+    slug = SlugField(unique=True)
+    description = TextField(null=True)
+    price = DecimalField(max_digits=10, decimal_places=2)
+    stock = IntegerField(default=0)
+    in_stock = BooleanField(default=True)
+    released = DateField(null=True)
+    extra = JSONField(default=dict)
+    category_id = ForeignKey(&quot;Category&quot;, on_delete=CASCADE)
+    internal_notes = private(Text, nullable=True)   # never appears in API schemas or the admin
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Base class</th>
+<th>Adds</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Model</code></td>
+<td><code>id: int</code> primary key</td>
+</tr>
+<tr>
+<td><code>TimestampedModel</code></td>
+<td><code>id</code>, <code>created_at</code>, <code>updated_at</code> (set automatically, UTC)</td>
+</tr>
+<tr>
+<td><code>Base</code></td>
+<td>nothing (bring your own primary key)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="orm--field-helpers">Field helpers</h3>
+<p>As in Django, every field is required (NOT NULL) unless you pass <code>null=True</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Column</th>
+<th>Python type</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CharField(max_length=n)</code></td>
+<td>VARCHAR(n); <code>n</code> also limits API input</td>
+<td><code>str</code></td>
+</tr>
+<tr>
+<td><code>TextField()</code></td>
+<td>TEXT</td>
+<td><code>str</code></td>
+</tr>
+<tr>
+<td><code>EmailField()</code>, <code>SlugField()</code></td>
+<td>VARCHAR(254) / VARCHAR(50, indexed)</td>
+<td><code>str</code></td>
+</tr>
+<tr>
+<td><code>IntegerField()</code>, <code>BigIntegerField()</code></td>
+<td>INTEGER / BIGINT</td>
+<td><code>int</code></td>
+</tr>
+<tr>
+<td><code>FloatField()</code></td>
+<td>FLOAT</td>
+<td><code>float</code></td>
+</tr>
+<tr>
+<td><code>DecimalField(max_digits, decimal_places)</code></td>
+<td>NUMERIC</td>
+<td><code>Decimal</code></td>
+</tr>
+<tr>
+<td><code>BooleanField(default=False)</code></td>
+<td>BOOLEAN</td>
+<td><code>bool</code></td>
+</tr>
+<tr>
+<td><code>DateTimeField(auto_now_add=True / auto_now=True)</code></td>
+<td>timestamp, always UTC-aware</td>
+<td><code>datetime</code></td>
+</tr>
+<tr>
+<td><code>DateField()</code>, <code>TimeField()</code></td>
+<td>DATE / TIME</td>
+<td><code>date</code> / <code>time</code></td>
+</tr>
+<tr>
+<td><code>UUIDField(default=uuid.uuid4)</code></td>
+<td>UUID</td>
+<td><code>UUID</code></td>
+</tr>
+<tr>
+<td><code>JSONField(default=dict)</code></td>
+<td>JSON</td>
+<td>any</td>
+</tr>
+<tr>
+<td><code>EnumField(MyEnum, default=MyEnum.X)</code></td>
+<td>VARCHAR holding the value (Django <code>choices</code>)</td>
+<td><code>MyEnum</code></td>
+</tr>
+<tr>
+<td><code>ForeignKey(Model, on_delete=..., null=False)</code></td>
+<td>the <code>&lt;name&gt;_id</code> column</td>
+<td><code>int</code></td>
+</tr>
+</tbody>
+</table>
+<p>Common options: <code>null</code>, <code>default</code> (a value or a callable), <code>unique</code>, <code>index</code>,
+<code>db_default</code> (a default written into the database schema), <code>help_text</code>.</p>
+<h3 id="orm--the-sqlalchemy-spelling">The SQLAlchemy spelling</h3>
+<p>Each helper is a plain SQLAlchemy <code>mapped_column</code>, so this is identical, and the
+two styles mix freely:</p>
+<pre><code class="language-python">from sqlalchemy import String
+from fastapi_mvt.db import Mapped, mapped_column
+
+class Product(TimestampedModel):
+    name: Mapped[str] = mapped_column(String(200), index=True)
+    description: Mapped[str | None]
+</code></pre>
+<p>Use it for anything the helpers don't cover (<code>Computed</code>, custom types, database-specific columns).</p>
+<p><strong>Table names</strong> are derived from the class (<code>OrderItem</code> → <code>order_items</code>,
+<code>Category</code> → <code>categories</code>). Set <code>__tablename__ = "..."</code> to choose.</p>
+<p><strong>Constraints and indexes</strong>:</p>
+<pre><code class="language-python">from sqlalchemy import UniqueConstraint
+
+class Membership(Model):
+    __table_args__ = (UniqueConstraint(&quot;group_id&quot;, &quot;user_id&quot;),)
+</code></pre>
+<p>Constraint names are generated deterministically, which migrations need.</p>
+<hr />
+<h2 id="orm--relationships">Relationships</h2>
+<pre><code class="language-python">from fastapi_mvt.db import CASCADE, SET_NULL, CharField, ForeignKey, Mapped, relationship
+
+
+class Author(TimestampedModel):
+    name = CharField(max_length=100)
+    posts: Mapped[list[&quot;Post&quot;]] = relationship(back_populates=&quot;author&quot;, foreign_keys=&quot;Post.author_id&quot;)
+
+
+class Post(TimestampedModel):
+    title = CharField(max_length=200)
+    author_id = ForeignKey(Author, on_delete=CASCADE)
+    editor_id = ForeignKey(&quot;Author&quot;, on_delete=SET_NULL, null=True)
+    author: Mapped[Author] = relationship(back_populates=&quot;posts&quot;, foreign_keys=[author_id])
+    tags: Mapped[list[&quot;Tag&quot;]] = relationship(secondary=&quot;post_tags&quot;)
+</code></pre>
+<p><strong><code>ForeignKey(target, on_delete=...)</code></strong> creates the foreign-key <em>column</em>
+(<code>author_id</code>); the Python-side link is a separate <code>relationship()</code>. <code>target</code> is
+a model class, a model name (<code>"Author"</code>), or <code>"table.column"</code>. <code>on_delete</code> is
+required (and <code>SET_NULL</code> needs <code>null=True</code>), as in Django. With the SQLAlchemy
+spelling use <code>author_id: Mapped[int] = fk(Author, on_delete=CASCADE)</code>.</p>
+<table>
+<thead>
+<tr>
+<th><code>on_delete</code></th>
+<th>When the referenced row is deleted</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CASCADE</code></td>
+<td>delete this row too</td>
+</tr>
+<tr>
+<td><code>SET_NULL</code></td>
+<td>set the column to NULL</td>
+</tr>
+<tr>
+<td><code>PROTECT</code> / <code>RESTRICT</code></td>
+<td>refuse the delete (the database raises; the API returns 409)</td>
+</tr>
+<tr>
+<td><code>NO_ACTION</code>, <code>SET_DEFAULT</code></td>
+<td>as in SQL</td>
+</tr>
+</tbody>
+</table>
+<p>The <strong>database</strong> enforces these rules, including on SQLite, where fastapi-mvt
+turns foreign keys on. That makes them correct for bulk deletes too.</p>
+<p><strong><code>relationship()</code></strong> is SQLAlchemy's, with one change: it never loads data
+implicitly. In async code, implicit loading can't work, and even in sync code it
+causes N+1 query storms. Load relations explicitly:</p>
+<pre><code class="language-python">posts = await Post.objects.prefetch(&quot;author&quot;, &quot;tags&quot;)      # one extra query per relation
+post = await Post.objects.select_related(&quot;author&quot;).get(id=1)  # JOIN, for to-one relations
+await post.load(&quot;tags&quot;)                                     # on an object you already have
+comments = await Comment.objects.prefetch(&quot;post__author&quot;)   # nested
+</code></pre>
+<p>Reading a relation you didn't load raises <code>RelationNotLoaded</code> with the fix:</p>
+<pre class="output"><code>Post.author is not loaded. Load it with the query: .prefetch(&quot;author&quot;) (or .select_related(&quot;author&quot;)),
+or on this object: await obj.load(&quot;author&quot;).
+</code></pre>
+<p>So a missing <code>prefetch</code> shows up in development, never as a hidden query per row in production.</p>
+<p>Many-to-many uses a plain association table:</p>
+<pre><code class="language-python">import sqlalchemy as sa
+from fastapi_mvt.db import Base
+
+post_tags = sa.Table(
+    &quot;post_tags&quot;, Base.metadata,
+    sa.Column(&quot;post_id&quot;, sa.ForeignKey(&quot;posts.id&quot;, ondelete=&quot;CASCADE&quot;), primary_key=True),
+    sa.Column(&quot;tag_id&quot;, sa.ForeignKey(&quot;tags.id&quot;, ondelete=&quot;CASCADE&quot;), primary_key=True),
+)
+</code></pre>
+<hr />
+<h2 id="orm--querying">Querying</h2>
+<p><code>Model.objects</code> returns a <strong>QuerySet</strong>. It's immutable, so every method returns a
+new one, and it hits the database only when awaited.</p>
+<pre><code class="language-python">posts = await Post.objects.filter(published=True).order_by(&quot;-created_at&quot;)[:10]
+</code></pre>
+<h3 id="orm--methods-that-build-a-query">Methods that build a query</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>filter(**lookups, *expressions)</code></td>
+<td><code>.filter(status="open", price__lt=10)</code></td>
+</tr>
+<tr>
+<td><code>exclude(...)</code></td>
+<td><code>.exclude(title="")</code> (keeps NULL rows, as in Django)</td>
+</tr>
+<tr>
+<td><code>order_by(*fields)</code></td>
+<td><code>.order_by("-created_at", "title")</code></td>
+</tr>
+<tr>
+<td><code>[start:stop]</code></td>
+<td><code>[20:40]</code> → OFFSET 20 LIMIT 20</td>
+</tr>
+<tr>
+<td><code>limit(n)</code> / <code>offset(n)</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>prefetch(*relations)</code> / <code>prefetch_related</code></td>
+<td><code>.prefetch("author", "tags__owner")</code></td>
+</tr>
+<tr>
+<td><code>select_related(*relations)</code></td>
+<td><code>.select_related("author")</code></td>
+</tr>
+<tr>
+<td><code>only(*fields)</code></td>
+<td>load just some columns</td>
+</tr>
+<tr>
+<td><code>distinct()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>select_for_update()</code></td>
+<td>lock rows until the transaction ends (PostgreSQL/MySQL)</td>
+</tr>
+<tr>
+<td><code>all()</code></td>
+<td>a copy (so <code>Post.objects.all().filter(...)</code> works)</td>
+</tr>
+<tr>
+<td><code>using(session)</code></td>
+<td>run on an explicit <code>AsyncSession</code></td>
+</tr>
+<tr>
+<td><code>options(...)</code></td>
+<td>raw SQLAlchemy loader options</td>
+</tr>
+</tbody>
+</table>
+<h3 id="orm--lookups">Lookups</h3>
+<p><code>field__lookup=value</code>; without a lookup it means <code>exact</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Lookup</th>
+<th>SQL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exact</code> (<code>field=None</code> → IS NULL)</td>
+<td><code>=</code></td>
+</tr>
+<tr>
+<td><code>iexact</code></td>
+<td>case-insensitive <code>=</code></td>
+</tr>
+<tr>
+<td><code>contains</code>, <code>icontains</code></td>
+<td><code>LIKE '%v%'</code> (wildcards in <code>v</code> are escaped)</td>
+</tr>
+<tr>
+<td><code>startswith</code>, <code>istartswith</code>, <code>endswith</code>, <code>iendswith</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>in</code></td>
+<td><code>IN (...)</code>, also accepts a QuerySet (subquery)</td>
+</tr>
+<tr>
+<td><code>gt</code>, <code>gte</code>, <code>lt</code>, <code>lte</code></td>
+<td><code>&gt;</code>, <code>&gt;=</code>, <code>&lt;</code>, <code>&lt;=</code></td>
+</tr>
+<tr>
+<td><code>range</code></td>
+<td><code>BETWEEN a AND b</code></td>
+</tr>
+<tr>
+<td><code>isnull</code></td>
+<td><code>IS NULL</code> / <code>IS NOT NULL</code></td>
+</tr>
+<tr>
+<td><code>year</code>, <code>month</code>, <code>day</code></td>
+<td>parts of a date/datetime</td>
+</tr>
+</tbody>
+</table>
+<p>Lookups <strong>span relations</strong> with <code>__</code>:</p>
+<pre><code class="language-python">await Post.objects.filter(author__name=&quot;Ada&quot;)              # many-to-one
+await Author.objects.filter(posts__title__icontains=&quot;sql&quot;)  # reverse / one-to-many
+await Post.objects.filter(tags__name=&quot;python&quot;, tags__active=True)  # one tag matching both
+await Post.objects.filter(author=ada)                      # compare with an object
+await Post.objects.filter(tags__isnull=True)               # posts without tags
+</code></pre>
+<p>A typo is caught with a suggestion:
+<code>FieldError: Post has no field 'titel'. Did you mean 'title'?</code></p>
+<p><strong>OR / NOT</strong> with <code>Q</code>:</p>
+<pre><code class="language-python">await Post.objects.filter(Q(views__gt=100) | Q(pinned=True), ~Q(status=&quot;draft&quot;))
+</code></pre>
+<p><strong>Anything else</strong> is a SQLAlchemy expression, passed positionally:</p>
+<pre><code class="language-python">from sqlalchemy import func
+await Post.objects.filter(func.length(Post.title) &gt; 50, Post.views &gt; Post.likes)
+</code></pre>
+<h3 id="orm--methods-that-run-the-query-await-them">Methods that run the query (await them)</h3>
+<table>
+<thead>
+<tr>
+<th>Method</th>
+<th>Returns</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>await qs</code></td>
+<td><code>list[Model]</code></td>
+</tr>
+<tr>
+<td><code>async for obj in qs</code></td>
+<td>iterate</td>
+</tr>
+<tr>
+<td><code>get(**lookups)</code></td>
+<td>one object; raises <code>Model.DoesNotExist</code> (→ 404) or <code>Model.MultipleObjectsReturned</code></td>
+</tr>
+<tr>
+<td><code>get_or_none(**lookups)</code></td>
+<td>object or <code>None</code></td>
+</tr>
+<tr>
+<td><code>first()</code> / <code>last()</code></td>
+<td>object or <code>None</code> (ordered by <code>id</code> if unordered)</td>
+</tr>
+<tr>
+<td><code>count()</code> / <code>exists()</code></td>
+<td><code>int</code> / <code>bool</code></td>
+</tr>
+<tr>
+<td><code>values("id", "title")</code></td>
+<td><code>list[dict]</code></td>
+</tr>
+<tr>
+<td><code>values_list("id", flat=True)</code></td>
+<td><code>list</code></td>
+</tr>
+<tr>
+<td><code>in_bulk([1, 2, 3])</code></td>
+<td><code>{id: obj}</code></td>
+</tr>
+<tr>
+<td><code>aggregate(total=func.sum(Order.amount))</code></td>
+<td><code>{"total": ...}</code></td>
+</tr>
+<tr>
+<td><code>paginate(params)</code></td>
+<td><code>Page</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="orm--creating-updating-deleting">Creating, updating, deleting</h2>
+<pre><code class="language-python">post = await Post.objects.create(title=&quot;Hello&quot;, author_id=1)   # INSERT, returns it with id
+post = Post(title=&quot;Hello&quot;, author=author); await post.save()    # same thing
+
+await post.update(title=&quot;Hi&quot;, published=True)   # set + save
+post.title = &quot;Hey&quot;; await post.save()
+await post.refresh()                             # reload from the database
+await post.delete()                              # related rows follow on_delete
+
+await Post.objects.bulk_create([Post(...), Post(...)])
+await Post.objects.filter(author_id=1).update(views=Post.views + 1)   # bulk UPDATE, returns count
+await Post.objects.filter(status=&quot;spam&quot;).delete()                      # bulk DELETE, returns count
+
+tag, created = await Tag.objects.get_or_create(name=&quot;python&quot;, defaults={&quot;color&quot;: &quot;blue&quot;})
+obj, created = await Setting.objects.update_or_create(key=&quot;theme&quot;, defaults={&quot;value&quot;: &quot;dark&quot;})
+</code></pre>
+<p><code>get_or_create</code> is safe when two requests race, provided a unique constraint
+covers the lookup fields: the loser finds the winner's row instead of failing.</p>
+<p>Passing <code>None</code> for a NOT NULL field that has a default uses the default, so
+<code>create(**schema.model_dump())</code> works even when optional fields are omitted.</p>
+<hr />
+<h2 id="orm--transactions">Transactions</h2>
+<p>The rules:</p>
+<ol>
+<li><strong>HTTP requests</strong> (with <code>db.init_app(app)</code>): one transaction per request. It
+   commits right before the response is sent; it rolls back if the endpoint
+   raises (any exception, including <code>HTTPException</code>) or returns a status ≥ 400.</li>
+<li><strong><code>async with atomic():</code></strong> makes a block atomic. Nested inside a request or
+   another <code>atomic()</code>, it's a savepoint: an error undoes only that block.</li>
+<li><strong>Anywhere else</strong> (shell, scripts, background tasks, WebSockets), each ORM call
+   commits on its own, like Django's autocommit.</li>
+</ol>
+<pre><code class="language-python">async with atomic():
+    order = await Order.objects.create(user_id=user.id)
+    for item in cart:
+        await OrderLine.objects.create(order_id=order.id, product_id=item.id)
+        updated = await Product.objects.filter(id=item.id, stock__gte=1).update(stock=Product.stock - 1)
+        if not updated:
+            raise OutOfStock(item.id)      # everything in the block is rolled back
+</code></pre>
+<p><strong><code>on_commit(callback)</code></strong> runs a sync or async callback after the outermost
+transaction commits, and never if it rolls back. Use it for emails, task queues
+and websocket pushes:</p>
+<pre><code class="language-python">post = await Post.objects.create(...)
+on_commit(lambda: send_notification.delay(post.id))
+</code></pre>
+<p>Callbacks registered in a savepoint that rolls back are discarded. A failing
+callback is logged, and doesn't turn a committed request into an error.</p>
+<p><strong>Keeping writes on an error response.</strong> An error response (status ≥ 400) rolls
+the request back, which is what you want almost always. For a write that must
+survive it (an audit entry, a failed-attempt counter), call <code>commit_on_error()</code>
+first. Unhandled exceptions still roll back:</p>
+<pre><code class="language-python">from fastapi_mvt.db import commit_on_error
+
+commit_on_error()
+await AuditEntry.objects.create(user_id=user.id, action=&quot;denied&quot;)
+raise HTTPException(403)
+</code></pre>
+<p>To turn the rule off for a whole app: <code>db.init_app(app, rollback_on_error_status=False)</code>.</p>
+<p><strong>Celery tasks and scripts</strong> can run an async function in one transaction with <code>db.run()</code>:</p>
+<pre><code class="language-python">@celery_app.task
+def close_expired_events():
+    db.run(_close_expired)
+
+async def _close_expired():
+    await Event.objects.filter(ends_at__lt=utcnow()).update(open=False)
+</code></pre>
+<hr />
+<h2 id="orm--schemas">Schemas</h2>
+<p>Models describe tables; schemas describe your API. <code>ModelSchema</code> builds a
+pydantic model from a model's columns so you don't write each field twice:</p>
+<pre><code class="language-python">from pydantic import Field
+from fastapi_mvt.db import ModelSchema, Schema
+
+class ProductCreate(ModelSchema, model=Product, mode=&quot;create&quot;):
+    name: str = Field(min_length=3, max_length=200)   # declared fields win
+
+class ProductUpdate(ModelSchema, model=Product, mode=&quot;update&quot;):
+    pass
+
+class ProductRead(ModelSchema, model=Product):         # &quot;read&quot; is the default
+    category: CategoryRead                               # add nested/extra fields
+
+@router.patch(&quot;/{id}&quot;, response_model=ProductRead)
+async def update(id: int, data: ProductUpdate):
+    product = await Product.objects.get(id=id)
+    return await product.update(**data.model_dump(exclude_unset=True))
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Mode</th>
+<th>Fields</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>read</code></td>
+<td>all public columns</td>
+</tr>
+<tr>
+<td><code>create</code></td>
+<td>no auto primary key, no <code>created_at</code>/<code>updated_at</code>; fields with a default are optional</td>
+</tr>
+<tr>
+<td><code>update</code></td>
+<td>like <code>create</code>, all optional</td>
+</tr>
+</tbody>
+</table>
+<p>Also <code>include=[...]</code> and <code>exclude=[...]</code>. <code>CharField(max_length=n)</code> becomes
+<code>max_length=n</code>, nullable fields become optional, and <code>private()</code> columns never
+appear. Type checkers understand this class form. For a one-off,
+<code>ProductRead = model_schema(Product)</code> does the same in one call, and
+hand-written <code>Schema</code> subclasses (pydantic with <code>from_attributes=True</code>) work everywhere.</p>
+<hr />
+<h2 id="orm--pagination">Pagination</h2>
+<pre><code class="language-python">from fastapi_mvt.db import Page, PageParams
+
+@router.get(&quot;&quot;, response_model=Page[ProductRead])
+async def list_products(params: PageParams = Depends()):
+    return await Product.objects.order_by(&quot;name&quot;).paginate(params)
+</code></pre>
+<p><code>?page=2&amp;size=50</code> (size ≤ 100) returns
+<code>{"items": [...], "total": 312, "page": 2, "size": 50, "pages": 7, "has_next": true, "has_previous": true}</code>.</p>
+<hr />
+<h2 id="orm--custom-querysets">Custom QuerySets</h2>
+<p>Reusable query logic, like Django managers:</p>
+<pre><code class="language-python">from typing import ClassVar
+from fastapi_mvt.db import Manager, QuerySet
+
+class PostQuerySet(QuerySet[&quot;Post&quot;]):
+    def published(self):
+        return self.filter(published=True)
+
+    def by(self, author):
+        return self.filter(author=author)
+
+class Post(TimestampedModel):
+    objects: ClassVar[Manager[PostQuerySet]] = Manager(PostQuerySet)
+    ...
+
+await Post.objects.published().by(ada).order_by(&quot;-created_at&quot;)
+</code></pre>
+<hr />
+<h2 id="orm--using-sqlalchemy-directly">Using SQLAlchemy directly</h2>
+<p>Nothing is hidden. Mix freely:</p>
+<pre><code class="language-python">from sqlalchemy import func, select
+from fastapi_mvt.db import current_session
+
+qs = Post.objects.filter(published=True)
+qs.statement                 # the sqlalchemy Select
+qs.sql()                     # the SQL text, for debugging
+
+session = current_session()  # the request's AsyncSession
+rows = await session.execute(
+    select(Author.name, func.count(Post.id)).join(Post).group_by(Author.name)
+)
+</code></pre>
+<p>Window functions, CTEs, <code>INSERT ... ON CONFLICT</code>, database-specific types: use
+SQLAlchemy as documented. The models are the same objects.</p>
+<p><code>db.sessionmaker</code> is an <code>async_sessionmaker</code> for libraries that want one
+(SQLAdmin, fastapi-users, ...), and it respects test isolation.</p>
+<hr />
+<h2 id="orm--sync-code">Sync code</h2>
+<p>The ORM is async, but plain <code>def</code> code can use it through <code>async_to_sync</code>, named
+after Django's <code>asgiref</code> helper:</p>
+<pre><code class="language-python">from fastapi_mvt.db import async_to_sync
+
+@router.get(&quot;/legacy&quot;)
+def legacy_endpoint():                                     # a plain `def` endpoint
+    posts = async_to_sync(Post.objects.filter(published=True))
+    return {&quot;count&quot;: len(posts)}
+
+save = async_to_sync(post.save)                            # or wrap an async function
+save()
+</code></pre>
+<p>Inside a FastAPI <code>def</code> endpoint or dependency it joins the request's
+transaction (so errors still roll everything back). In a plain script it runs in
+a transaction of its own. In <code>async def</code> code, just use <code>await</code>.</p>
+<hr />
+<h2 id="orm--where-sessions-come-from">Where sessions come from</h2>
+<p>You never create or pass sessions for normal work. For every ORM call, the
+session is chosen in this order:</p>
+<ol>
+<li><code>qs.using(session)</code> / <code>obj.save(session=...)</code> (explicit)</li>
+<li>the current <code>atomic()</code> / <code>db.session()</code> block</li>
+<li>the current HTTP request</li>
+<li>otherwise: a short transaction just for this call</li>
+</ol>
+<hr />
+<h2 id="orm--common-errors">Common errors</h2>
+<table>
+<thead>
+<tr>
+<th>Error</th>
+<th>Meaning / fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>RelationNotLoaded: Post.author is not loaded...</code></td>
+<td>Load the relation: <code>.prefetch("author")</code> or <code>await post.load("author")</code>. The message says which.</td>
+</tr>
+<tr>
+<td><code>FieldError: Post has no field 'x'. Did you mean ...?</code></td>
+<td>A typo in a lookup.</td>
+</tr>
+<tr>
+<td><code>SessionError: There is no active database session here</code></td>
+<td><code>current_session()</code> outside a request or <code>atomic()</code>. Wrap the code in <code>async with atomic():</code>.</td>
+</tr>
+<tr>
+<td><code>Post.DoesNotExist</code> in a request</td>
+<td>Returned as 404 automatically. Catch it where you want other behaviour.</td>
+</tr>
+<tr>
+<td>HTTP 409</td>
+<td>A unique / foreign-key constraint failed (<code>IntegrityError</code>).</td>
+</tr>
+</tbody>
+</table>
+<h2 id="orm--performance">Performance</h2>
+<p>The query layer builds a normal SQLAlchemy statement, so the database work is
+identical; the cost is Python overhead per query. Measured with
+<code>benchmarks/orm_overhead.py</code> (SQLite, one session, a Windows laptop; numbers are noisy):</p>
+<table>
+<thead>
+<tr>
+<th>Query</th>
+<th>Plain SQLAlchemy</th>
+<th>fastapi-mvt</th>
+<th>Overhead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Primary-key lookup</td>
+<td>~550 µs</td>
+<td>~690 µs</td>
+<td>about +0.15 ms</td>
+</tr>
+<tr>
+<td>Filtered, ordered list of 20 rows</td>
+<td>~1.64 ms</td>
+<td>~1.73 ms</td>
+<td>about +0.1 ms (+6%)</td>
+</tr>
+</tbody>
+</table>
+<p>Against a networked database, where a round trip usually costs 0.5–2 ms, this is
+small. On a hot path, use <code>qs.statement</code> or <code>current_session()</code> directly.</p></article>
+<article class="page" id="migrations" data-label="Migrations" hidden><h1 id="migrations--migrations-guide">Migrations guide</h1>
+<p>fastapi-mvt gives you Django's migration commands on top of
+<a href="https://alembic.sqlalchemy.org/">Alembic</a>, the standard SQLAlchemy migration
+tool. Migration files are ordinary Alembic scripts: readable, editable and
+reviewable in pull requests.</p>
+<h2 id="migrations--commands">Commands</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th>What it does</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>makemigrations</code></td>
+<td>Compare models with the database and write a new migration</td>
+</tr>
+<tr>
+<td><code>makemigrations --name add_prices</code></td>
+<td>Choose the name</td>
+</tr>
+<tr>
+<td><code>makemigrations --empty --name backfill</code></td>
+<td>Empty migration for data changes</td>
+</tr>
+<tr>
+<td><code>makemigrations --check</code></td>
+<td>Exit 1 if models have unmigrated changes (CI)</td>
+</tr>
+<tr>
+<td><code>makemigrations --merge</code></td>
+<td>Join two branches' migrations</td>
+</tr>
+<tr>
+<td><code>makemigrations --no-input</code></td>
+<td>Never prompt; unsafe changes become errors</td>
+</tr>
+<tr>
+<td><code>makemigrations --allow-destructive</code></td>
+<td>Allow drops without asking</td>
+</tr>
+<tr>
+<td><code>migrate</code></td>
+<td>Apply everything pending</td>
+</tr>
+<tr>
+<td><code>migrate 0003</code></td>
+<td>Move to 0003, forwards or <strong>backwards</strong></td>
+</tr>
+<tr>
+<td><code>migrate zero</code></td>
+<td>Unapply everything</td>
+</tr>
+<tr>
+<td><code>migrate --fake</code></td>
+<td>Mark as applied without running (adopting an existing database)</td>
+</tr>
+<tr>
+<td><code>rollback [n]</code></td>
+<td>Unapply the last <em>n</em> migrations (default 1)</td>
+</tr>
+<tr>
+<td><code>showmigrations</code></td>
+<td><code>[X]</code> applied / <code>[ ]</code> pending</td>
+</tr>
+<tr>
+<td><code>sqlmigrate 0003 [--backwards]</code></td>
+<td>Print the SQL (PostgreSQL/MySQL; SQLite needs a live database for batch mode)</td>
+</tr>
+<tr>
+<td><code>check</code></td>
+<td>Config, models and migrations are all in order (CI)</td>
+</tr>
+</tbody>
+</table>
+<p>Run them as <code>python manage.py &lt;command&gt;</code> or <code>fastapi-mvt &lt;command&gt;</code> from anywhere
+inside the project. Migrations are numbered like Django's: <code>0001_initial</code>,
+<code>0002_users_role</code>, <code>0003_create_events_and_more</code>.</p>
+<h2 id="migrations--the-workflow">The workflow</h2>
+<ol>
+<li>Change a model.</li>
+<li><code>python manage.py makemigrations</code>: review the printed operations, and the file if unsure.</li>
+<li><code>python manage.py migrate</code>.</li>
+<li>Commit the model change <strong>and</strong> the migration file together.</li>
+</ol>
+<p><code>migrate</code> warns when your models have changes that no migration covers.</p>
+<p><strong>What <code>makemigrations</code> compares against.</strong> Like Django, it compares your
+models with your <em>migration files</em>, not with your development database: it
+replays the migrations into a temporary database (a temp SQLite file, or a
+throwaway PostgreSQL database) and diffs against that. So you never need to
+<code>migrate</code> before <code>makemigrations</code>, switching git branches doesn't confuse it,
+and a table you created by hand in your dev database never sneaks into a
+migration. It also proves your existing migrations still apply from scratch.
+If it can't create a PostgreSQL database (no <code>CREATEDB</code> permission), it falls
+back to comparing against your database and says so.</p>
+<h2 id="migrations--safety-checks">Safety checks</h2>
+<p>Alembic's autogenerate is a diff; it can't know your intent. <code>makemigrations</code>
+adds the checks that prevent data loss:</p>
+<p><strong>Renames.</strong> A removed column plus an added column of a compatible type produces:</p>
+<pre class="output"><code>Was events.location renamed to events.venue? [y/N]
+</code></pre>
+<p><em>Yes</em> writes <code>ALTER TABLE ... RENAME</code>, keeping the data; the downgrade renames it
+back. Renaming a model class renames its table, and gets the same question.
+Without a terminal, a possible rename is reported and the drop needs <code>--allow-destructive</code>.</p>
+<p><strong>Deletions.</strong> Dropping a table or a column asks for confirmation (or needs
+<code>--allow-destructive</code>). A dropped table also gets a hint: if you didn't delete the
+model, its module isn't being imported.</p>
+<p><strong>Required fields on existing tables.</strong> A new NOT NULL column needs a value for
+the rows that already exist, or <code>migrate</code> would crash in production:</p>
+<ul>
+<li>if the field has a default (<code>IntegerField(default=0)</code>), that default fills
+  the existing rows automatically, as in Django;</li>
+<li>otherwise you're asked for a one-off value, which fills the rows and is then
+  removed from the schema.</li>
+</ul>
+<p>Making a nullable column NOT NULL works the same way (an <code>UPDATE</code> replaces NULLs
+first). Without a terminal, a missing value is an error that explains the options.</p>
+<p><strong>Broken imports.</strong> Every <code>models.py</code> is imported before comparing. If one fails,
+the command stops with the original traceback. A model that silently failed to
+import would otherwise look deleted and produce a <code>DROP TABLE</code>.</p>
+<p><strong>No hidden writes.</strong> <code>makemigrations</code> never changes your database; only <code>migrate</code>
+does. There is no <code>create_all()</code> anywhere, so migrations are the single source
+of truth for the schema.</p>
+<h2 id="migrations--which-models-are-included">Which models are included</h2>
+<p>With <code>models = "auto"</code> in <code>[tool.fastapi-mvt]</code> (the default), every top-level
+package containing a <code>models.py</code> or a <code>models/</code> package is imported. To be
+explicit instead:</p>
+<pre><code class="language-toml">[tool.fastapi-mvt]
+models = [&quot;users.models&quot;, &quot;events.models&quot;, &quot;billing.models&quot;]
+</code></pre>
+<h2 id="migrations--data-migrations">Data migrations</h2>
+<pre><code class="language-bash">python manage.py makemigrations --empty --name fill_slugs
+</code></pre>
+<pre><code class="language-python">def upgrade() -&gt; None:
+    posts = sa.table(&quot;posts&quot;, sa.column(&quot;title&quot;, sa.String), sa.column(&quot;slug&quot;, sa.String))
+    op.execute(posts.update().values(slug=sa.func.lower(posts.c.title)))
+</code></pre>
+<p>Use <code>sa.table()</code> snapshots rather than importing your models: the migration must
+keep working after the models change.</p>
+<h2 id="migrations--sqlite-and-postgresql">SQLite and PostgreSQL</h2>
+<ul>
+<li>Migrations generated on SQLite apply on PostgreSQL and vice versa. The test
+  suite runs every scenario on both.</li>
+<li>On SQLite, table changes use Alembic's <em>batch mode</em> (copy the table, change
+  it, copy back), which SQLite needs for most <code>ALTER</code>s. This is automatic.</li>
+<li>Each migration runs in its own transaction. If migration 0005 fails, 0001–0004
+  stay applied and 0005 is rolled back (PostgreSQL rolls back DDL too; SQLite
+  mostly does).</li>
+</ul>
+<h2 id="migrations--working-in-a-team">Working in a team</h2>
+<p>If two branches each add <code>0005_...</code>, both are "latest":</p>
+<pre class="output"><code>Error: Conflicting migrations detected; multiple leaf migrations: 0005_add_price, 0005_add_sku.
+Run `makemigrations --merge`.
+</code></pre>
+<p><code>makemigrations --merge</code> writes <code>0006_merge_0005_0005</code>, which depends on both.</p>
+<h2 id="migrations--in-production">In production</h2>
+<ul>
+<li>Run <code>python manage.py migrate</code> as a release step, <strong>before</strong> starting the new code.</li>
+<li>Prefer backwards-compatible steps for zero-downtime deploys: add a nullable
+  column, deploy, backfill, then make it required in a later release.</li>
+<li><code>python manage.py check</code> in CI catches forgotten migrations.</li>
+</ul>
+<h2 id="migrations--adopting-an-existing-database">Adopting an existing database</h2>
+<p>If the tables already exist (created by hand or by fastapi-mvt 0.1's
+<code>create_all</code>), create the initial migration and mark it as applied:</p>
+<pre><code class="language-bash">python manage.py makemigrations    # against an EMPTY database, e.g. DATABASE_URL=sqlite:///tmp.db
+python manage.py migrate --fake    # on the real database: records it as applied, runs nothing
+</code></pre>
+<p>Then run <code>makemigrations</code> against the real database to see any remaining differences.</p>
+<h2 id="migrations--using-alembic-directly">Using Alembic directly</h2>
+<p>Migration files are standard Alembic scripts, and <code>migrations/env.py</code> simply calls
+<code>fastapi_mvt.migrations.run_migrations()</code>. Generate migrations with
+<code>makemigrations</code>, though: the safety checks live there, not in plain
+<code>alembic revision --autogenerate</code>.</p></article>
+<article class="page" id="testing" data-label="Testing" hidden><h1 id="testing--testing-guide">Testing guide</h1>
+<pre><code class="language-bash">pip install -e &quot;.[test]&quot;
+pytest
+</code></pre>
+<p>The pytest plugin is active as soon as fastapi-mvt is installed. There's nothing
+to configure.</p>
+<h2 id="testing--fixtures">Fixtures</h2>
+<table>
+<thead>
+<tr>
+<th>Fixture</th>
+<th>What you get</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>client</code></td>
+<td><code>httpx.AsyncClient</code> for your app (<code>await client.get("/items")</code>)</td>
+</tr>
+<tr>
+<td><code>db</code></td>
+<td>your <code>Database</code>, with the test wrapped in a transaction that is rolled back afterwards</td>
+</tr>
+</tbody>
+</table>
+<p><code>client</code> uses <code>db</code>, so requests and your test code share one transaction and
+see each other's writes, and all of it disappears after the test.</p>
+<p><strong>Every <code>async def</code> test gets <code>db</code> automatically</strong>, so a test that forgets to
+ask for it still can't leak rows into the next test. To opt a test out (for
+example one that manages its own connections), mark it <code>@pytest.mark.no_db</code>.</p>
+<pre><code class="language-python">from users.models import User
+
+async def test_signup(client):
+    response = await client.post(&quot;/auth/register&quot;, json={&quot;email&quot;: &quot;a@b.io&quot;, &quot;password&quot;: &quot;long-password&quot;})
+    assert response.status_code == 201
+    assert await User.objects.filter(email=&quot;a@b.io&quot;).exists()
+</code></pre>
+<p>Tests are plain <code>async def</code> functions (<code>asyncio_mode = "auto"</code> is set in the
+generated <code>pyproject.toml</code>).</p>
+<h2 id="testing--the-test-database">The test database</h2>
+<table>
+<thead>
+<tr>
+<th>Your DATABASE_URL</th>
+<th>Test database</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>SQLite</td>
+<td>a temporary file, deleted afterwards</td>
+</tr>
+<tr>
+<td>PostgreSQL</td>
+<td><code>&lt;name&gt;_test</code>, created at the start and dropped at the end</td>
+</tr>
+<tr>
+<td>anything else</td>
+<td>set <code>TEST_DATABASE_URL</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>TEST_DATABASE_URL</code> always wins. The schema is created <strong>by running your
+migrations</strong>, so a broken migration fails the test run, not your deploy. If
+models have changes that no migration covers, the run stops with
+"run makemigrations first". A project without migrations falls back to <code>create_all()</code>.</p>
+<h2 id="testing--authenticated-requests">Authenticated requests</h2>
+<p>Create a user and mint a token directly instead of calling <code>/auth/login</code> in every test:</p>
+<pre><code class="language-python">import pytest
+from myproject.auth import auth
+from users.models import User
+
+@pytest.fixture
+async def headers(db):
+    user = await User.objects.create(email=&quot;me@example.com&quot;, password=&quot;!&quot;)   # &quot;!&quot; = no usable password
+    return {&quot;Authorization&quot;: f&quot;Bearer {auth.create_access_token(user)}&quot;}
+
+async def test_create_post(client, headers):
+    response = await client.post(&quot;/posts&quot;, json={&quot;title&quot;: &quot;Hi&quot;}, headers=headers)
+    assert response.status_code == 201
+</code></pre>
+<h2 id="testing--tips">Tips</h2>
+<ul>
+<li>Test business rules by calling your service functions directly; they're plain
+  async functions.</li>
+<li>Run the same suite against PostgreSQL in CI by setting <code>TEST_DATABASE_URL</code>
+  (see the repository's GitHub workflow for a service-container example).</li>
+</ul></article>
+<article class="page" id="auth-and-admin" data-label="Auth & admin" hidden><h1 id="auth-and-admin--authentication-and-admin">Authentication and admin</h1>
+<p>Both are optional extras: <code>pip install "fastapi-mvt[auth]"</code> and <code>"fastapi-mvt[admin]"</code>.
+Projects created with <code>startproject</code> include auth.</p>
+<h2 id="auth-and-admin--the-user-model">The user model</h2>
+<pre><code class="language-python">from fastapi_mvt.auth import AbstractUser
+from fastapi_mvt.db import CharField, TimestampedModel
+
+class User(AbstractUser, TimestampedModel):
+    full_name = CharField(max_length=150, null=True)
+</code></pre>
+<p><code>AbstractUser</code> provides <code>email</code> (unique), <code>password</code> (hashed, private),
+<code>is_active</code>, <code>is_superuser</code>, <code>last_login</code>, private <code>token_version</code>,
+<code>failed_logins</code> and <code>locked_until</code> columns, and
+<code>await user.set_password(raw)</code> / <code>await user.check_password(raw)</code>. The model is
+yours: add fields, run <code>makemigrations</code>.</p>
+<p>Passwords are hashed with PBKDF2-SHA256 in <strong>Django's format</strong>, so users imported
+from a Django project keep their passwords. Hashing runs in a worker thread
+instead of blocking the event loop. Hashes from fastapi-mvt 0.1 (bcrypt) still
+verify if <code>bcrypt</code> is installed, and are upgraded at the next login.</p>
+<h2 id="auth-and-admin--setup">Setup</h2>
+<pre><code class="language-python"># myproject/auth.py
+from typing import Annotated
+from fastapi import Depends
+from fastapi_mvt.auth import Auth
+from users.models import User
+
+auth = Auth(User, secret_key=settings.secret_key)      # 32+ characters, required
+CurrentUser = Annotated[User, Depends(auth.current_user)]
+Superuser = Annotated[User, Depends(auth.superuser)]
+
+# main.py
+app.include_router(auth.router)
+</code></pre>
+<h2 id="auth-and-admin--endpoints">Endpoints</h2>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /auth/register</code></td>
+<td><code>{email, password}</code> → the user (201). Duplicate email → 409</td>
+</tr>
+<tr>
+<td><code>POST /auth/login</code></td>
+<td><code>{email, password}</code> → <code>{access_token, refresh_token, token_type, expires_in}</code></td>
+</tr>
+<tr>
+<td><code>POST /auth/token</code></td>
+<td>same, as an OAuth2 form, so the <strong>Authorize</strong> button in <code>/docs</code> works</td>
+</tr>
+<tr>
+<td><code>POST /auth/refresh</code></td>
+<td><code>{refresh_token}</code> → new tokens</td>
+</tr>
+<tr>
+<td><code>POST /auth/logout</code></td>
+<td>revokes <strong>all</strong> of the user's tokens (every device)</td>
+</tr>
+<tr>
+<td><code>GET /auth/me</code></td>
+<td>the current user</td>
+</tr>
+<tr>
+<td><code>POST /auth/password</code></td>
+<td><code>{current_password, new_password}</code>; revokes existing tokens</td>
+</tr>
+</tbody>
+</table>
+<p>Emails are stored lowercased. A wrong email and a wrong password give the same
+error and take the same time, so attackers can't probe which emails exist.</p>
+<h2 id="auth-and-admin--login-protection">Login protection</h2>
+<p>After <code>max_failed_logins</code> wrong passwords in a row (default 5) the account is
+locked for <code>lockout_minutes</code> (default 15): <code>/auth/login</code> answers <strong>429</strong> with a
+<code>Retry-After</code> header, even for the right password. A successful login resets the
+counter. The counter is stored on the user row, so it works across all server
+processes. <code>max_failed_logins=None</code> turns it off.</p>
+<p>Per-account lockout can be abused to lock someone out on purpose; for public
+sites, also rate-limit by IP at your proxy (or with a library like <code>slowapi</code>).</p>
+<h2 id="auth-and-admin--password-reset">Password reset</h2>
+<p>Pass a function that delivers the reset token, usually by email, and two
+endpoints appear:</p>
+<pre><code class="language-python">async def send_password_reset(user: User, token: str) -&gt; None:
+    await send_email(user.email, &quot;Reset your password&quot;, f&quot;https://app.example.com/reset?token={token}&quot;)
+
+auth = Auth(User, secret_key=settings.secret_key, send_password_reset=send_password_reset)
+</code></pre>
+<table>
+<thead>
+<tr>
+<th>Endpoint</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>POST /auth/password-reset</code></td>
+<td><code>{email}</code> → 202, always the same answer (doesn't reveal which emails exist); the token is sent in the background</td>
+</tr>
+<tr>
+<td><code>POST /auth/password-reset/confirm</code></td>
+<td><code>{token, new_password}</code> → 204; the token works once, expires after 30 minutes (<code>password_reset_minutes</code>), and all existing logins are revoked</td>
+</tr>
+</tbody>
+</table>
+<h2 id="auth-and-admin--protecting-endpoints">Protecting endpoints</h2>
+<pre><code class="language-python">@router.get(&quot;/me/orders&quot;)
+async def my_orders(user: CurrentUser):
+    return await Order.objects.filter(user_id=user.id)
+
+@router.delete(&quot;/users/{id}&quot;)
+async def remove_user(id: int, admin: Superuser): ...
+</code></pre>
+<p><code>auth.optional_user</code> returns <code>None</code> for anonymous requests. Role checks are
+ordinary dependencies; see <code>require_role</code> in the <a href="#tutorial--2-users-and-roles">tutorial</a>.</p>
+<h2 id="auth-and-admin--how-tokens-are-revoked">How tokens are revoked</h2>
+<p>Access tokens are short-lived JWTs (30 minutes by default) carrying the user's
+<code>token_version</code>. Logout and password changes increment it, which invalidates
+every earlier token at once, on every server process, with no blacklist to keep
+in sync. Inactive users (<code>is_active=False</code>) are rejected immediately.</p>
+<h2 id="auth-and-admin--customising">Customising</h2>
+<pre><code class="language-python">class MyAuth(Auth):
+    async def create_user(self, data):
+        user = await super().create_user(data)
+        on_commit(lambda: send_welcome_email.delay(user.id))
+        return user
+
+auth = MyAuth(
+    User,
+    secret_key=...,
+    register_schema=SignUp,          # accept extra fields (subclass RegisterRequest)
+    user_schema=UserRead,            # what /auth/me and /register return
+    allow_registration=False,        # invite-only
+    access_token_minutes=15,
+    refresh_token_days=30,
+)
+</code></pre>
+<p>Need OAuth/social login, API keys or sessions? <code>fastapi-mvt</code> models are plain
+SQLAlchemy, so libraries like fastapi-users or Authlib work with them. Use
+<code>db.sessionmaker</code> where a library asks for a session factory.</p>
+<h2 id="auth-and-admin--admin-site">Admin site</h2>
+<pre><code class="language-bash">pip install &quot;fastapi-mvt[admin]&quot;
+python manage.py createsuperuser
+</code></pre>
+<pre><code class="language-python">from fastapi_mvt.admin import setup_admin
+
+setup_admin(app, db, auth=auth)                          # all models at /admin
+setup_admin(app, db, auth=auth, models=[User, Event])   # or pick some
+</code></pre>
+<p>Only active superusers can log in. <code>private()</code> columns (like password hashes)
+are hidden from lists, detail pages and forms. The admin is
+<a href="https://aminalaee.dev/sqladmin/">SQLAdmin</a>; for custom views, use its <code>ModelView</code>
+API directly, since your models are ordinary SQLAlchemy models.</p></article>
+<article class="page" id="cli" data-label="Command line" hidden><h1 id="cli--command-line">Command line</h1>
+<p>Run commands as <code>python manage.py &lt;command&gt;</code> or <code>fastapi-mvt &lt;command&gt;</code> from
+anywhere inside a project. <code>--help</code> works on every command.</p>
+<h2 id="cli--project">Project</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>startproject &lt;name&gt; [-d DIR]</code></td>
+<td>New project: settings, database, auth, tests. Generates a random <code>SECRET_KEY</code></td>
+</tr>
+<tr>
+<td><code>startapp &lt;name&gt;</code></td>
+<td>New app (models, schemas, router, test) and registers its router in <code>main.py</code></td>
+</tr>
+<tr>
+<td><code>startapp &lt;name&gt; --crud &lt;Model&gt;</code></td>
+<td>Same, plus a working model, schemas, CRUD endpoints and tests</td>
+</tr>
+</tbody>
+</table>
+<p>Generators never overwrite files, and the generated code passes ruff and mypy.</p>
+<h2 id="cli--migrations">Migrations</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>makemigrations [--name N] [--empty] [--merge] [--check] [--allow-destructive] [--no-input]</code></td>
+<td>Write a migration for model changes</td>
+</tr>
+<tr>
+<td><code>migrate [target] [--fake]</code></td>
+<td>Apply migrations; <code>migrate 0003</code> moves back or forward, <code>migrate zero</code> unapplies all</td>
+</tr>
+<tr>
+<td><code>rollback [n]</code></td>
+<td>Unapply the last <em>n</em> migrations</td>
+</tr>
+<tr>
+<td><code>showmigrations</code></td>
+<td>List migrations, <code>[X]</code> if applied</td>
+</tr>
+<tr>
+<td><code>sqlmigrate &lt;migration&gt; [--backwards]</code></td>
+<td>Print a migration's SQL</td>
+</tr>
+</tbody>
+</table>
+<p>See the <a href="#migrations">migrations guide</a>.</p>
+<h2 id="cli--development">Development</h2>
+<table>
+<thead>
+<tr>
+<th>Command</th>
+<th></th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>runserver [host:port] [--noreload]</code></td>
+<td>Development server with auto-reload</td>
+</tr>
+<tr>
+<td><code>shell</code></td>
+<td>Python shell with every model and <code>db</code> loaded; top-level <code>await</code> works (IPython if installed)</td>
+</tr>
+<tr>
+<td><code>createsuperuser [--email E] [--no-input]</code></td>
+<td>Create an admin user (<code>--no-input</code> reads <code>$SUPERUSER_PASSWORD</code>)</td>
+</tr>
+<tr>
+<td><code>routes</code></td>
+<td>List the app's endpoints</td>
+</tr>
+<tr>
+<td><code>check</code></td>
+<td>Exit 1 if the app doesn't import, models are broken, or migrations are missing or unapplied (for CI)</td>
+</tr>
+<tr>
+<td><code>version</code></td>
+<td>Print the fastapi-mvt version</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cli--your-own-commands">Your own commands</h2>
+<p>Like Django's <code>management/commands</code>: put a <code>commands.py</code> in any app, and every
+function decorated with <code>@command()</code> becomes a command. Parameters become
+options (with type conversion and <code>--help</code>), and the docstring becomes the help
+text. Async commands run inside one database transaction.</p>
+<pre><code class="language-python"># events/commands.py
+from fastapi_mvt.commands import command
+from fastapi_mvt.db import utcnow
+
+from events.models import Event
+
+
+@command()
+async def close_past_events(dry_run: bool = False) -&gt; None:
+    &quot;&quot;&quot;Close events that have ended.&quot;&quot;&quot;
+    past = Event.objects.filter(ends_at__lt=utcnow())
+    print(f&quot;{await past.count()} event(s) to close&quot;)
+    if not dry_run:
+        await past.delete()
+
+
+@command(name=&quot;hello&quot;)
+def say_hello(name: str) -&gt; None:
+    print(f&quot;hello {name}&quot;)
+</code></pre>
+<pre><code class="language-bash">python manage.py close_past_events --dry-run
+python manage.py hello Ada
+</code></pre>
+<p>A broken <code>commands.py</code> prints a warning instead of blocking the built-in
+commands. A command can't reuse a built-in command's name.</p></article>
+<article class="page" id="deployment" data-label="Deployment" hidden><h1 id="deployment--deployment">Deployment</h1>
+<h2 id="deployment--settings">Settings</h2>
+<p>All settings come from environment variables (or <code>.env</code> locally):</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>SECRET_KEY</code></td>
+<td><strong>Required.</strong> 32+ random characters: <code>python -c "import secrets; print(secrets.token_urlsafe(50))"</code></td>
+</tr>
+<tr>
+<td><code>DATABASE_URL</code></td>
+<td><code>postgresql://user:pass@host:5432/db</code>. The async driver is chosen automatically</td>
+</tr>
+<tr>
+<td><code>DEBUG</code></td>
+<td><code>false</code> in production</td>
+</tr>
+<tr>
+<td><code>ALLOWED_ORIGINS</code></td>
+<td>JSON list of browser origins for CORS, e.g. <code>["https://app.example.com"]</code></td>
+</tr>
+<tr>
+<td><code>ACCESS_TOKEN_MINUTES</code>, <code>REFRESH_TOKEN_DAYS</code></td>
+<td>token lifetimes</td>
+</tr>
+</tbody>
+</table>
+<p>Install the PostgreSQL driver: <code>pip install "fastapi-mvt[postgres]"</code>.</p>
+<h2 id="deployment--release-steps">Release steps</h2>
+<pre><code class="language-bash">python manage.py check          # models, app import, migrations
+python manage.py migrate        # before the new code starts serving
+uvicorn myproject.main:app --host 0.0.0.0 --port 8000 --workers 4 --proxy-headers
+</code></pre>
+<p>Run <code>migrate</code> once per release (a release job, init container or deploy hook),
+not in every web process.</p>
+<h2 id="deployment--docker">Docker</h2>
+<pre><code class="language-dockerfile">FROM python:3.12-slim
+WORKDIR /app
+COPY pyproject.toml .
+COPY . .
+RUN pip install --no-cache-dir &quot;.[postgres]&quot;
+CMD [&quot;uvicorn&quot;, &quot;myproject.main:app&quot;, &quot;--host&quot;, &quot;0.0.0.0&quot;, &quot;--port&quot;, &quot;8000&quot;, &quot;--workers&quot;, &quot;4&quot;, &quot;--proxy-headers&quot;]
+</code></pre>
+<p>Release command: <code>python manage.py migrate</code>.</p>
+<h2 id="deployment--connection-pool">Connection pool</h2>
+<p><code>Database(url, pool_size=10, max_overflow=20, pool_pre_ping=True)</code> passes options
+to SQLAlchemy's engine. Budget <code>workers × (pool_size + max_overflow)</code> connections
+against your PostgreSQL <code>max_connections</code>.</p>
+<h2 id="deployment--background-jobs">Background jobs</h2>
+<p>Enqueue jobs in <code>on_commit</code> so they never see uncommitted data:</p>
+<pre><code class="language-python">on_commit(lambda: send_receipt.delay(order.id))
+</code></pre>
+<p>Inside a Celery (or RQ, Dramatiq, ...) worker, run ORM code with <code>db.run(async_function, *args)</code>.</p>
+<h2 id="deployment--websockets-across-processes">WebSockets across processes</h2>
+<p>Use <code>ConnectionManager(RedisChannelBackend(redis.asyncio.from_url(...)))</code>
+(<code>pip install "fastapi-mvt[redis]"</code>) and start/stop it in the app lifespan:</p>
+<pre><code class="language-python">@asynccontextmanager
+async def lifespan(app):
+    await manager.start()
+    yield
+    await manager.stop()
+</code></pre>
+<h2 id="deployment--security-checklist">Security checklist</h2>
+<ul>
+<li><code>DEBUG=false</code>, a strong <code>SECRET_KEY</code>, HTTPS in front of the app.</li>
+<li><code>ALLOWED_ORIGINS</code> lists your front-ends; there is no <code>*</code> default.</li>
+<li>Rate limiting belongs in your proxy or in a library like <code>slowapi</code>; fastapi-mvt
+  doesn't pretend to do it in-process.</li>
+</ul></article>
+<article class="page" id="comparison" data-label="Comparison" hidden><h1 id="comparison--choosing-fastapi-mvt-or-not">Choosing fastapi-mvt (or not)</h1>
+<p>An honest comparison with the tools you're probably also considering. Each one
+is good; they solve different problems.</p>
+<h2 id="comparison--the-short-answer">The short answer</h2>
+<table>
+<thead>
+<tr>
+<th>If you…</th>
+<th>Use</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>already run Django, or want Django's admin, auth, forms and ecosystem with a typed API layer</td>
+<td><strong>Django Ninja</strong></td>
+</tr>
+<tr>
+<td>want the official, complete FastAPI starting point (React frontend, Docker, Traefik)</td>
+<td><strong>FastAPI full-stack template</strong></td>
+</tr>
+<tr>
+<td>want the thinnest layer over SQLAlchemy, with one class for table and schema</td>
+<td><strong>SQLModel</strong></td>
+</tr>
+<tr>
+<td>want a different async framework with a batteries-included data layer</td>
+<td><strong>Litestar + Advanced Alchemy</strong></td>
+</tr>
+<tr>
+<td>want <strong>FastAPI + SQLAlchemy</strong>, but with Django's everyday data-layer productivity: queries, transactions, safe migrations, test isolation</td>
+<td><strong>fastapi-mvt</strong></td>
+</tr>
+</tbody>
+</table>
+<h2 id="comparison--fastapi-mvt-vs-django-ninja">fastapi-mvt vs Django Ninja</h2>
+<p>Django Ninja puts a FastAPI-style API layer on top of Django. <strong>If you want
+Django, use Django</strong>: its ORM, admin, auth, migrations and ecosystem are more
+mature than anything here, and Django Ninja gives it a modern API layer. For a
+Django team building an API, it's the better choice.</p>
+<p>fastapi-mvt is for the opposite starting point: teams on <strong>FastAPI and
+SQLAlchemy</strong> who want Django's conveniences without leaving that stack.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Django Ninja</th>
+<th>fastapi-mvt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Web framework</td>
+<td>Django (ASGI or WSGI)</td>
+<td>FastAPI / Starlette</td>
+</tr>
+<tr>
+<td>ORM</td>
+<td>Django ORM (async support is partial; many operations run in a thread)</td>
+<td>SQLAlchemy 2, async end to end</td>
+</tr>
+<tr>
+<td>Query power</td>
+<td>Django ORM</td>
+<td>Django-style API, plus all of SQLAlchemy one line away</td>
+</tr>
+<tr>
+<td>Migrations</td>
+<td>Django migrations (the gold standard)</td>
+<td>Alembic, with Django-style commands and safety checks</td>
+</tr>
+<tr>
+<td>Admin</td>
+<td>Django admin (excellent)</td>
+<td>SQLAdmin (good, less customizable)</td>
+</tr>
+<tr>
+<td>Auth</td>
+<td>Django auth + packages</td>
+<td>JWT auth with lockout and reset; OAuth via other libraries</td>
+</tr>
+<tr>
+<td>Ecosystem</td>
+<td>Django packages</td>
+<td>FastAPI + SQLAlchemy packages</td>
+</tr>
+<tr>
+<td>Maturity</td>
+<td>Established</td>
+<td>New (0.x)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="comparison--fastapi-mvt-vs-sqlmodel">fastapi-mvt vs SQLModel</h2>
+<p>SQLModel merges the SQLAlchemy table and the pydantic schema into one class, and
+it's what FastAPI's own tutorial uses. It improves how models are declared, but
+leaves the rest to you: sessions, query syntax, transactions, migrations and
+test setup. Its docs also recommend separate <code>Create</code>/<code>Read</code>/<code>Update</code> classes to
+avoid leaking fields, which <code>ModelSchema</code> generates here.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>SQLModel</th>
+<th>fastapi-mvt</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Model declaration</td>
+<td>one class for table + schema</td>
+<td>model + <code>ModelSchema</code> generated from it</td>
+</tr>
+<tr>
+<td>Queries</td>
+<td><code>session.exec(select(Hero).where(Hero.age &gt; 30))</code></td>
+<td><code>await Hero.objects.filter(age__gt=30)</code></td>
+</tr>
+<tr>
+<td>Sessions</td>
+<td>you pass them around</td>
+<td>ambient; one transaction per request</td>
+</tr>
+<tr>
+<td>Migrations</td>
+<td>plain Alembic</td>
+<td>Django-style commands + safety checks</td>
+</tr>
+<tr>
+<td>Test isolation</td>
+<td>set it up yourself</td>
+<td>built in</td>
+</tr>
+<tr>
+<td>Typing</td>
+<td>excellent</td>
+<td>excellent for fields; lookups like <code>age__gt</code> are strings</td>
+</tr>
+</tbody>
+</table>
+<h2 id="comparison--fastapi-mvt-vs-the-fastapi-full-stack-template">fastapi-mvt vs the FastAPI full-stack template</h2>
+<p>The official template is a complete <em>application</em>: React frontend, Docker
+Compose, Traefik, email, CI. It's the best way to start a full product with
+FastAPI's author's choices. fastapi-mvt is a <em>library</em> plus a small backend
+project generator. The two can coexist: the template's backend could use
+fastapi-mvt's data layer.</p>
+<h2 id="comparison--fastapi-mvt-vs-plain-sqlalchemy">fastapi-mvt vs plain SQLAlchemy</h2>
+<p>Plain SQLAlchemy 2 is the most flexible option and what fastapi-mvt is built
+on. You give up nothing by adding fastapi-mvt: every model is a SQLAlchemy
+model, <code>qs.statement</code> is a SQLAlchemy <code>Select</code>, and <code>current_session()</code> is a
+real <code>AsyncSession</code>. What you gain is less code for common work, request
+transactions, migration safety checks and test isolation. What it costs is a
+dependency, a young project, and about 0.1 ms of Python overhead per query (see
+<a href="#orm--performance">Performance</a>).</p>
+<h2 id="comparison--when-fastapi-mvt-is-the-wrong-choice">When fastapi-mvt is the wrong choice</h2>
+<ul>
+<li>You need Django's admin, forms or ecosystem → Django (with Django Ninja).</li>
+<li>Your codebase is sync-only and large → <code>async_to_sync</code> works, but the ORM is
+  designed for async code.</li>
+<li>You need several databases, read replicas or schema-per-tenant → not
+  supported yet; use SQLAlchemy directly.</li>
+<li>You need MySQL today → only SQLite and PostgreSQL are tested.</li>
+<li>You can't take a dependency on a 0.x project → wait for 1.0, or use plain
+  SQLAlchemy and borrow the patterns.</li>
+</ul></article>
+<article class="page" id="design" data-label="Design notes" hidden><h1 id="design--design-notes">Design notes</h1>
+<p>Why fastapi-mvt is built the way it is. This answers the fair questions asked
+about version 0.1: <em>why not SQLModel? why not a template? isn't this a
+Django-like monolith?</em></p>
+<h2 id="design--what-it-is">What it is</h2>
+<p><strong>A library, not a framework around FastAPI.</strong> Your app is a normal FastAPI app.
+fastapi-mvt adds:</p>
+<ol>
+<li>a Django-style data layer on SQLAlchemy 2 (models, QuerySets, transactions),</li>
+<li>a safe Django-style migration workflow on Alembic,</li>
+<li>a test harness (isolated test database, per-test rollback),</li>
+<li>a CLI to scaffold projects and apps,</li>
+<li>optional extras: auth, admin, WebSocket fan-out.</li>
+</ol>
+<p>Remove it and you're left with FastAPI + SQLAlchemy + Alembic code that still
+makes sense.</p>
+<h2 id="design--why-sqlalchemy-and-not-sqlmodel">Why SQLAlchemy, and not SQLModel</h2>
+<p>SQLModel is SQLAlchemy plus shared pydantic/table classes. It improves how
+models are <em>declared</em>, but the everyday pain is elsewhere: sessions, async
+loading errors, transactions, query verbosity, migrations and testing. SQLModel
+doesn't address those. Its own docs also recommend separate <code>Create</code>/<code>Read</code>/
+<code>Update</code> classes to avoid leaking fields, which is what <code>ModelSchema</code>
+generates for you.</p>
+<p>Building a new ORM would mean re-implementing SQL generation, relationships and
+dialects, a maintenance burden with no end. So the rule is:</p>
+<blockquote>
+<p>Every model is a real SQLAlchemy mapped class, and every QuerySet compiles to a
+real <code>select()</code>, exposed as <code>qs.statement</code>.</p>
+</blockquote>
+<p>The Django-style layer is thin (~2k lines) and translates to SQLAlchemy calls
+that are easy to inspect. Alembic, SQLAdmin, and any SQLAlchemy extension work
+unchanged, and dropping to SQLAlchemy is ordinary usage, not an escape hatch.</p>
+<h2 id="design--decisions-in-the-data-layer">Decisions in the data layer</h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>One transaction per request, committed <em>before</em> the response is sent</td>
+<td>Django's <code>ATOMIC_REQUESTS</code> semantics; a client never gets 200 for data that failed to commit</td>
+</tr>
+<tr>
+<td>Error status (≥400) or exception → rollback</td>
+<td><code>raise HTTPException(403)</code> after a write can't leave half-done work</td>
+</tr>
+<tr>
+<td>Autocommit per call outside requests</td>
+<td>What Django does; scripts, the shell and background tasks just work</td>
+</tr>
+<tr>
+<td><code>on_commit</code> instead of ORM signals</td>
+<td>Signals fired during flush ran for rows that were later rolled back (verified in 0.1)</td>
+</tr>
+<tr>
+<td>Relationships never load implicitly</td>
+<td>Implicit I/O is impossible in async and causes N+1 in sync; failing loudly is safer</td>
+</tr>
+<tr>
+<td>Deletes executed by the database (<code>on_delete</code> required)</td>
+<td>Correct for bulk deletes, no loading of children, same semantics as Django's API</td>
+</tr>
+<tr>
+<td>SQLite: foreign keys on, real connection pool, savepoints fixed</td>
+<td>0.1 silently ignored <code>CASCADE</code> and shared one connection between concurrent sessions</td>
+</tr>
+<tr>
+<td>Timestamps always UTC-aware</td>
+<td>SQLite would otherwise return naive datetimes and store wall-clock times</td>
+</tr>
+<tr>
+<td>Enums stored as VARCHAR values</td>
+<td>Adding a member needs no <code>ALTER TYPE</code>; readable in SQL</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design--decisions-in-migrations">Decisions in migrations</h2>
+<p>Alembic is the standard, so migration files are Alembic scripts. What
+fastapi-mvt adds is what Django developers rely on and Alembic leaves to you:</p>
+<ul>
+<li>comparing models with the <strong>migration history</strong> (replayed into a scratch
+  database), not with the dev database, so pending migrations and manual
+  changes never leak into a new migration;</li>
+<li>rename detection, confirmation before data loss, defaults for new required
+  fields (the field's default, or a one-off value);</li>
+<li>sequential names, backwards <code>migrate &lt;target&gt;</code>, merge for branches, a CI check;</li>
+<li>refusing to continue when a models module fails to import (0.1 swallowed that
+  error and could generate <code>DROP TABLE</code>).</li>
+</ul>
+<h2 id="design--why-a-cli-and-not-only-a-template">Why a CLI and not only a template</h2>
+<p>A template (Cookiecutter/Copier) is great for the <em>first</em> commit, and the
+generated project here is intentionally plain: you own every file. But the
+valuable commands (<code>makemigrations</code>, <code>migrate</code>, <code>showmigrations</code>, <code>check</code>,
+<code>createsuperuser</code>) are behaviour, not files, and behaviour in a template can't
+be upgraded or tested. So scaffolding lives in real template files inside the
+package (not f-strings), and the CLI carries the tested behaviour.</p>
+<h2 id="design--what-was-removed-from-01-and-why">What was removed from 0.1, and why</h2>
+<table>
+<thead>
+<tr>
+<th>Removed</th>
+<th>Reason</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>INSTALLED_APPS</code> / app registry</td>
+<td>Silently skipped apps that failed to import; routers are now included explicitly</td>
+</tr>
+<tr>
+<td>ORM signals</td>
+<td>Fired before commit, ran for rolled-back data, blocked or lost async receivers → <code>on_commit</code></td>
+</tr>
+<tr>
+<td>SQL-injection middleware</td>
+<td>Blocked legitimate input (<code>rock;roll</code>, <code>Tom and Jerry</code>) with 500s and protected nothing (queries are parameterised)</td>
+</tr>
+<tr>
+<td>In-process rate limiter</td>
+<td>500 instead of 429, bypassable via <code>X-Forwarded-For</code>, per-process; use a proxy or <code>slowapi</code></td>
+</tr>
+<tr>
+<td>CORS <code>*</code> with credentials default</td>
+<td>Let any site make credentialed requests</td>
+</tr>
+<tr>
+<td>Celery, Redis, Jinja2, websockets as hard dependencies</td>
+<td>Not every project needs them; Celery works with <code>on_commit</code> + <code>db.run</code></td>
+</tr>
+<tr>
+<td>In-memory token blacklist</td>
+<td>Didn't work with more than one process → <code>token_version</code></td>
+</tr>
+<tr>
+<td><code>manage.py</code> logic / 1,000-line f-string generator</td>
+<td>Replaced by real template files and a tested CLI</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design--developer-experience-decisions">Developer experience decisions</h2>
+<table>
+<thead>
+<tr>
+<th>Decision</th>
+<th>Why</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Django-style field helpers (<code>CharField(max_length=...)</code>) next to <code>Mapped[...]</code></td>
+<td>Familiar to Django developers, and still fully typed SQLAlchemy columns</td>
+</tr>
+<tr>
+<td><code>class X(ModelSchema, model=M)</code> instead of <code>class X(model_schema(M))</code></td>
+<td>Type checkers understand class keywords; dynamic base classes fail mypy</td>
+</tr>
+<tr>
+<td>Ships <code>py.typed</code>; generated code passes ruff and mypy</td>
+<td>Teams with CI linting shouldn't fail on untouched scaffolding</td>
+</tr>
+<tr>
+<td>Relationship errors say how to fix them</td>
+<td>SQLAlchemy's <code>lazy='raise_on_sql'</code> message tells you what, not what to do</td>
+</tr>
+<tr>
+<td><code>async_to_sync</code> for <code>def</code> endpoints and scripts</td>
+<td>Gradual adoption in sync codebases, with the same request transaction</td>
+</tr>
+<tr>
+<td><code>commit_on_error()</code></td>
+<td>The escape hatch for writes that must survive an error response</td>
+</tr>
+<tr>
+<td>Per-test isolation for every async test</td>
+<td>Forgetting a fixture must not make tests order-dependent</td>
+</tr>
+<tr>
+<td>App <code>commands.py</code> becomes <code>manage.py</code> commands</td>
+<td>Django developers expect to write their own commands</td>
+</tr>
+</tbody>
+</table>
+<h2 id="design--what-is-deliberately-not-included">What is deliberately <em>not</em> included</h2>
+<p>Templates/HTML rendering, forms, an admin framework of its own, a settings
+framework beyond pydantic-settings, and a plugin/app registry. FastAPI and its
+ecosystem already solve those well.</p></article>
+<article class="page" id="upgrading-from-0.1" data-label="Upgrading from 0.1" hidden><h1 id="upgrading-from-0.1--upgrading-from-fastapi-mvt-01">Upgrading from fastapi-mvt 0.1</h1>
+<p>0.2 is a rewrite. The concepts carry over, the API changes. The
+<a href="https://github.com/OdaiAhmed99/fastapi-mvt-showcase">showcase repository</a> was
+ported this way; compare its <code>main</code> branch with <code>redesign-v0.2</code>.</p>
+<h2 id="upgrading-from-0.1--quickest-path">Quickest path</h2>
+<ol>
+<li><code>pip install "fastapi-mvt[auth,server,test]&gt;=0.2"</code>.</li>
+<li>Generate a fresh project with the same package name in a scratch folder
+   (<code>fastapi-mvt startproject &lt;name&gt;</code>), and copy its <code>pyproject.toml</code>,
+   <code>manage.py</code>, <code>&lt;name&gt;/settings.py</code>, <code>db.py</code>, <code>auth.py</code>, <code>main.py</code> into your
+   project. Keep your <code>.env</code>, but make sure it has a 32+ character <code>SECRET_KEY</code>.</li>
+<li>Rename each app's <code>urls.py</code>/<code>views.py</code> into a <code>router.py</code> and include it in <code>main.py</code>.</li>
+<li>Convert models and queries (below).</li>
+<li>Adopt your existing database (below).</li>
+</ol>
+<h2 id="upgrading-from-0.1--models">Models</h2>
+<pre><code class="language-python"># 0.1
+from sqlalchemy import Column, Integer, String, ForeignKey
+class Post(Base):
+    __tablename__ = &quot;posts&quot;
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(200), nullable=False)
+    author_id = Column(Integer, ForeignKey(&quot;users.id&quot;, ondelete=&quot;CASCADE&quot;))
+
+# 0.2
+from fastapi_mvt.db import CASCADE, Mapped, TimestampedModel, fk, mapped_column
+class Post(TimestampedModel):
+    title: Mapped[str] = mapped_column(String(200))
+    author_id: Mapped[int] = fk(&quot;User&quot;, on_delete=CASCADE)
+</code></pre>
+<p>For the user model, use <code>class User(AbstractUser, TimestampedModel)</code>. 0.1's
+<code>hashed_password</code> column is now <code>password</code>: add a rename when you run
+<code>makemigrations</code> (answer <em>yes</em> to "Was users.hashed_password renamed to
+users.password?"). Old bcrypt hashes keep working with <code>pip install bcrypt</code>.</p>
+<h2 id="upgrading-from-0.1--queries-and-sessions">Queries and sessions</h2>
+<table>
+<thead>
+<tr>
+<th>0.1</th>
+<th>0.2</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>db: Session = Depends(get_db)</code> in every endpoint</td>
+<td>nothing (remove it)</td>
+</tr>
+<tr>
+<td><code>db.query(Post).filter(Post.id == 1).first()</code></td>
+<td><code>await Post.objects.get_or_none(id=1)</code></td>
+</tr>
+<tr>
+<td><code>get_object_or_404(Post, db, id=1)</code></td>
+<td><code>await Post.objects.get(id=1)</code></td>
+</tr>
+<tr>
+<td><code>paginate(query, page, size)</code></td>
+<td><code>await qs.paginate(params)</code> with <code>Page[Schema]</code></td>
+</tr>
+<tr>
+<td><code>db.add(x); db.commit(); db.refresh(x)</code></td>
+<td><code>await x.save()</code> (commit happens at the end of the request)</td>
+</tr>
+<tr>
+<td><code>def endpoint(...)</code> with sync session</td>
+<td><code>async def endpoint(...)</code></td>
+</tr>
+<tr>
+<td><code>@receiver(post_save, sender=X)</code></td>
+<td>call your code, and use <code>on_commit(...)</code> for side effects</td>
+</tr>
+<tr>
+<td><code>configure_auth(AuthConfig(...))</code></td>
+<td><code>auth = Auth(User, secret_key=...)</code></td>
+</tr>
+<tr>
+<td><code>Depends(get_current_user)</code></td>
+<td><code>user: CurrentUser</code></td>
+</tr>
+<tr>
+<td><code>from fastapi_mvt.utils.websocket import ConnectionManager</code></td>
+<td><code>from fastapi_mvt.websockets import ConnectionManager</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="upgrading-from-0.1--adopting-the-existing-database">Adopting the existing database</h2>
+<p>0.1 created some tables with <code>create_all()</code>, outside migrations. Let 0.2 take over:</p>
+<pre><code class="language-bash">DATABASE_URL=sqlite:///./empty.sqlite3 python manage.py makemigrations   # 0001_initial from the models
+python manage.py migrate --fake                                           # real DB: mark as applied
+python manage.py makemigrations                                           # any real differences
+</code></pre>
+<p>Review the last migration carefully; it is where the old schema and the new
+models differ.</p></article>
+<article class="page" id="changelog" data-label="Changelog" hidden><h1 id="changelog--changelog">Changelog</h1>
+<h2 id="changelog--020-unreleased">0.2.0 (unreleased)</h2>
+<p>A redesign. See <a href="#upgrading-from-0.1">Upgrading from 0.1</a> and
+<a href="#design">Design notes</a>.</p>
+<h3 id="changelog--added">Added</h3>
+<ul>
+<li>Django-style async ORM layer on SQLAlchemy 2: <code>Model</code>, <code>TimestampedModel</code>,
+  <code>Model.objects</code> QuerySets with Django lookups (including across relations),
+  <code>Q</code>, <code>get_or_create</code>/<code>update_or_create</code>, bulk operations, <code>values()</code>,
+  <code>aggregate()</code>, custom QuerySets, <code>Model.DoesNotExist</code> → 404, <code>IntegrityError</code> → 409.</li>
+<li>One transaction per HTTP request (committed before the response is sent),
+  <code>atomic()</code> with savepoints, <code>on_commit()</code>, <code>current_session()</code>, <code>db.run()</code> for sync code.</li>
+<li><code>fk(..., on_delete=...)</code>, async-safe <code>relationship()</code>, <code>private()</code> columns,
+  UTC-aware timestamps, enums stored as values.</li>
+<li><code>model_schema()</code> to derive create/read/update pydantic schemas; <code>Page</code>/<code>PageParams</code>.</li>
+<li>Migration commands: <code>makemigrations</code> (rename detection, destructive-change
+  confirmation, one-off defaults for new NOT NULL columns, <code>--empty</code>, <code>--merge</code>,
+  <code>--check</code>), <code>migrate [target|zero] [--fake]</code>, <code>rollback</code>, <code>showmigrations</code>, <code>sqlmigrate</code>.</li>
+<li><code>check</code>, <code>shell</code> (top-level <code>await</code>), <code>routes</code>, <code>runserver</code>, <code>startapp --crud</code>.</li>
+<li>pytest plugin: <code>db</code> and <code>client</code> fixtures, test database built from migrations,
+  per-test rollback, automatic <code>&lt;name&gt;_test</code> PostgreSQL database.</li>
+<li>Auth rewrite: async, PyJWT, Django-compatible PBKDF2 hashes, token revocation
+  via <code>token_version</code> (works across processes), refresh tokens, password change,
+  OAuth2 form endpoint for <code>/docs</code>.</li>
+<li><code>setup_admin()</code> for SQLAdmin, superusers only.</li>
+<li>Test suite (SQLite and PostgreSQL) and CI.</li>
+</ul>
+<h3 id="changelog--added-developer-experience">Added (developer experience)</h3>
+<ul>
+<li>Django-style field helpers: <code>CharField</code>, <code>TextField</code>, <code>IntegerField</code>,
+  <code>DecimalField</code>, <code>BooleanField</code>, <code>DateTimeField(auto_now_add=...)</code>, <code>EnumField</code>,
+  <code>ForeignKey</code>, and more, typed as <code>Mapped[...]</code>.</li>
+<li><code>ModelSchema</code> (<code>class PostRead(ModelSchema, model=Post)</code>), understood by type checkers.</li>
+<li><code>py.typed</code>: the package is typed; generated projects pass ruff and mypy.</li>
+<li><code>makemigrations</code> compares models with the migration history (scratch
+  database) instead of the dev database; no <code>migrate</code> needed first.</li>
+<li>A new NOT NULL column with a default fills existing rows automatically.</li>
+<li>Relationship errors (<code>RelationNotLoaded</code>) explain how to load the relation.</li>
+<li>Custom management commands from each app's <code>commands.py</code>.</li>
+<li><code>async_to_sync</code> for plain <code>def</code> endpoints and scripts.</li>
+<li><code>commit_on_error()</code> and <code>db.init_app(app, rollback_on_error_status=False)</code>.</li>
+<li>Every async test is isolated automatically (<code>@pytest.mark.no_db</code> opts out).</li>
+<li>Auth: login lockout after repeated failures (429) and password reset endpoints.</li>
+<li>Docs: comparison page, CLI reference, benchmark, HTML docs site (GitHub Pages).</li>
+</ul>
+<h3 id="changelog--changed">Changed</h3>
+<ul>
+<li>Projects are generated from real template files; <code>startproject</code>/<code>startapp</code>
+  never overwrite files. Project configuration lives in <code>[tool.fastapi-mvt]</code> in <code>pyproject.toml</code>.</li>
+<li>SQLite: foreign keys enforced, a real connection pool, correct SAVEPOINTs.</li>
+<li>Core dependencies trimmed to FastAPI, SQLAlchemy, Alembic, pydantic-settings, Typer
+  and aiosqlite; everything else is an extra.</li>
+</ul>
+<h3 id="changelog--removed">Removed</h3>
+<ul>
+<li><code>INSTALLED_APPS</code> / <code>AppRegistry</code>: include routers explicitly.</li>
+<li>ORM signals: use <code>on_commit()</code> and explicit calls.</li>
+<li><code>SQLInjectionProtectionMiddleware</code>, <code>RateLimitMiddleware</code>, <code>CustomMiddleware</code>.</li>
+<li>Hard dependencies on Celery, Redis, Jinja2, websockets, python-jose, bcrypt.</li>
+<li><code>get_object_or_404</code>, <code>get_list_or_404</code>, <code>paginate()</code> helpers (replaced by QuerySet methods).</li>
+</ul>
+<h3 id="changelog--fixed-found-in-the-02-production-review">Fixed (found in the 0.2 production review)</h3>
+<ul>
+<li>Concurrent ORM calls in one request (<code>asyncio.gather</code>) failed with a 500;
+  they now take turns on the request's session.</li>
+<li>With Alembic 1.14 a detected column rename was written as a no-op
+  <code>alter_column</code>; renames are now always rendered (and never silently dropped).</li>
+<li><code>typer&gt;=0.12</code> allowed versions that crash with current Click; the minimum is now 0.13.</li>
+<li><code>migrate</code> and <code>check</code> created scratch databases on the server being deployed
+  to; they now compare with the (up-to-date) live database.</li>
+<li>An explicit <code>null</code> for a required field in an update schema produced a 409
+  from the database; it's now a 422 validation error.</li>
+<li>Server databases now use <code>pool_pre_ping</code>, so a database restart doesn't break
+  the next requests.</li>
+<li><code>ModelSchema</code> no longer rewrites class annotations (future-proof for Python 3.14).</li>
+<li><code>on_commit(async_fn)</code> from plain sync code crashed; it now runs immediately.</li>
+</ul>
+<h3 id="changelog--fixed-01-issues">Fixed (0.1 issues)</h3>
+<ul>
+<li>A models module failing to import could generate <code>DROP TABLE</code> migrations.</li>
+<li><code>makemigrations</code> silently upgraded the database; <code>createsuperuser</code> created
+  tables outside migrations.</li>
+<li>Concurrent SQLite sessions shared one connection and each other's transactions.</li>
+<li><code>ON DELETE CASCADE</code> was ignored on SQLite.</li>
+<li>Signals fired for rolled-back data.</li>
+<li>Wide-open CORS with credentials by default.</li>
+</ul></article>
+  </main>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script>
+(function () {
+  const pages = [...document.querySelectorAll(".page")];
+  const navItems = [...document.querySelectorAll("#nav > li")];
+  const select = document.getElementById("page-select");
+
+  // Wrap tables and code blocks so they scroll on their own, never the page.
+  document.querySelectorAll(".page table").forEach(t => {
+    const w = document.createElement("div"); w.className = "table-wrap"; t.replaceWith(w); w.appendChild(t);
+  });
+  document.querySelectorAll(".page pre").forEach(pre => {
+    const w = document.createElement("div"); w.className = "code-wrap"; pre.replaceWith(w); w.appendChild(pre);
+    const b = document.createElement("button"); b.type = "button"; b.className = "copy"; b.textContent = "Copy";
+    b.addEventListener("click", () => {
+      const text = pre.innerText.replace(/\n$/, "");
+      const done = () => { b.textContent = "Copied"; setTimeout(() => (b.textContent = "Copy"), 1400); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, () => selectText(pre));
+      } else { selectText(pre); }
+    });
+    w.appendChild(b);
+  });
+  function selectText(node) {
+    const r = document.createRange(); r.selectNodeContents(node);
+    const s = window.getSelection(); s.removeAllRanges(); s.addRange(r);
+  }
+
+  if (window.hljs) {
+    document.querySelectorAll(".page pre:not(.output) code").forEach(el => {
+      if (/language-(toml|ini)/.test(el.className)) el.className = "language-ini";
+      if (/language-text/.test(el.className)) return;
+      try { hljs.highlightElement(el); } catch (e) {}
+    });
+  }
+
+  // Previous / next links make the tutorial and guides readable as a sequence.
+  pages.forEach((page, i) => {
+    const pager = document.createElement("nav"); pager.className = "pager"; pager.setAttribute("aria-label", "Pages");
+    if (i > 0) pager.insertAdjacentHTML("beforeend", `<a class="prev" href="#${pages[i-1].id}"><small>Previous</small><span>${pages[i-1].dataset.label}</span></a>`);
+    if (i < pages.length - 1) pager.insertAdjacentHTML("beforeend", `<a class="next" href="#${pages[i+1].id}"><small>Next</small><span>${pages[i+1].dataset.label}</span></a>`);
+    page.appendChild(pager);
+    const opt = document.createElement("option"); opt.value = page.id; opt.textContent = page.dataset.label; select.appendChild(opt);
+  });
+  select.addEventListener("change", () => { location.hash = select.value; });
+
+  let current = null;
+  function route() {
+    const hash = decodeURIComponent(location.hash.slice(1));
+    const pageId = hash.split("--")[0];
+    const page = pages.find(p => p.id === pageId) || pages[0];
+    if (page !== current) {
+      pages.forEach(p => (p.hidden = p !== page));
+      navItems.forEach(li => li.classList.toggle("current", li.dataset.page === page.id));
+      select.value = page.id;
+      current = page;
+      observeSections();
+    }
+    const target = hash.includes("--") ? document.getElementById(hash) : null;
+    if (target) target.scrollIntoView(); else window.scrollTo(0, 0);
+  }
+  window.addEventListener("hashchange", route);
+
+  // Highlight the section being read in the sidebar.
+  let observer;
+  function observeSections() {
+    if (observer) observer.disconnect();
+    if (!("IntersectionObserver" in window)) return;
+    const links = new Map([...document.querySelectorAll(".sections a")].map(a => [a.getAttribute("href").slice(1), a]));
+    observer = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting && links.has(e.target.id)) {
+          links.forEach(a => a.classList.remove("active"));
+          links.get(e.target.id).classList.add("active");
+        }
+      });
+    }, { rootMargin: "0px 0px -70% 0px" });
+    current.querySelectorAll("h2[id]").forEach(h => observer.observe(h));
+  }
+
+  // Theme: System / Light / Dark, remembered per viewer when storage is available.
+  const buttons = [...document.querySelectorAll("[data-theme-choice]")];
+  function applyTheme(choice) {
+    if (choice === "light" || choice === "dark") document.documentElement.setAttribute("data-theme", choice);
+    else document.documentElement.removeAttribute("data-theme");
+    buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.themeChoice === choice)));
+  }
+  let saved = "system";
+  try { saved = localStorage.getItem("mvt-docs-theme") || "system"; } catch (e) {}
+  if (!document.documentElement.hasAttribute("data-theme") || saved !== "system") applyTheme(saved);
+  else buttons.forEach(b => b.setAttribute("aria-pressed", String(b.dataset.themeChoice === document.documentElement.getAttribute("data-theme"))));
+  buttons.forEach(b => b.addEventListener("click", () => {
+    applyTheme(b.dataset.themeChoice);
+    try { localStorage.setItem("mvt-docs-theme", b.dataset.themeChoice); } catch (e) {}
+  }));
+
+  route();
+})();
+</script>

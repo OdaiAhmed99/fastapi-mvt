@@ -1,0 +1,7 @@
+"""The project database. Import `db` wherever you need the engine or a session."""
+
+from fastapi_mvt.db import Database
+
+from {{project}}.settings import settings
+
+db = Database(settings.database_url, echo=settings.sql_echo)

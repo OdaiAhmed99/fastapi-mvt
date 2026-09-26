@@ -1,0 +1,57 @@
+"""HTTP endpoints for {{app}}.
+
+Each request runs in one transaction: it commits when the endpoint returns
+and rolls back if it raises. `Model.objects.get()` raises a 404 by itself.
+"""
+
+from fastapi import APIRouter
+{% crud %}
+from fastapi import Depends, status
+
+from fastapi_mvt.db import Page, PageParams
+{% auth %}
+from {{project}}.auth import CurrentUser
+{% end %}
+from {{app}}.models import {{Model}}
+from {{app}}.schemas import {{Model}}Create, {{Model}}Read, {{Model}}Update
+
+router = APIRouter(prefix="/{{url}}", tags=["{{app}}"])
+
+
+@router.get("", response_model=Page[{{Model}}Read])
+async def list_{{plural}}(params: PageParams = Depends(), q: str | None = None):
+    items = {{Model}}.objects.order_by("-id")
+    if q:
+        items = items.filter(name__icontains=q)
+    return await items.paginate(params)
+
+
+@router.post("", response_model={{Model}}Read, status_code=status.HTTP_201_CREATED)
+async def create_{{singular}}(data: {{Model}}Create{% auth %}, user: CurrentUser{% end %}):
+    return await {{Model}}.objects.create(**data.model_dump())
+
+
+@router.get("/{item_id}", response_model={{Model}}Read)
+async def get_{{singular}}(item_id: int):
+    return await {{Model}}.objects.get(id=item_id)
+
+
+@router.patch("/{item_id}", response_model={{Model}}Read)
+async def update_{{singular}}(item_id: int, data: {{Model}}Update{% auth %}, user: CurrentUser{% end %}):
+    item = await {{Model}}.objects.get(id=item_id)
+    return await item.update(**data.model_dump(exclude_unset=True))
+
+
+@router.delete("/{item_id}", status_code=status.HTTP_204_NO_CONTENT)
+async def delete_{{singular}}(item_id: int{% auth %}, user: CurrentUser{% end %}) -> None:
+    item = await {{Model}}.objects.get(id=item_id)
+    await item.delete()
+{% else %}
+
+router = APIRouter(prefix="/{{url}}", tags=["{{app}}"])
+
+
+@router.get("")
+async def index() -> dict[str, str]:
+    return {"app": "{{app}}"}
+{% end %}

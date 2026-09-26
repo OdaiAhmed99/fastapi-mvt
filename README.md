@@ -1,307 +1,128 @@
-# FastAPI MVT
+# fastapi-mvt
 
-> A batteries-included project framework for FastAPI — structured, fast to start, and built for developers who want Django's ergonomics with FastAPI's performance.
+**Django's productivity for FastAPI, without leaving FastAPI or SQLAlchemy.**
 
-[![Python](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.104%2B-009688)](https://fastapi.tiangolo.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Docs](https://img.shields.io/badge/docs-gitbook-blue)](https://odaithalji.gitbook.io/fastapi)
+fastapi-mvt is a library, not a framework around FastAPI. Your app stays a
+normal FastAPI app; fastapi-mvt gives it:
 
----
+- a **Django-style ORM layer on SQLAlchemy 2**: `Post.objects.filter(author__name="Ada")`,
+  async all the way, no session plumbing;
+- **Django's migration workflow on Alembic** (`makemigrations`, `migrate`,
+  `showmigrations`), with the safety checks Alembic leaves out: rename
+  detection, confirmation before data loss, one-off defaults for new required fields;
+- **one transaction per request**, committed before the response is sent,
+  plus `atomic()` and `on_commit()`;
+- a **test harness**: isolated test database built from your migrations, each
+  test rolled back;
+- a **CLI**: `startproject`, `startapp --crud`, `createsuperuser`, `shell`, `check`;
+- optional **auth** (JWT, Django-compatible password hashes), **admin**
+  (SQLAdmin) and **WebSocket** fan-out.
 
-## Overview
+```python
+class Event(TimestampedModel):
+    title = CharField(max_length=200)
+    starts_at = DateTimeField()
+    instructor_id = ForeignKey(User, on_delete=CASCADE)
+    instructor: Mapped[User] = relationship()
 
-**FastAPI MVT** is a project scaffolding framework built on top of FastAPI.
 
-It gives you a full project skeleton the moment you run one command — with authentication, database, WebSocket, signals, middleware, and CLI management all wired together and ready to use.
+class EventRead(ModelSchema, model=Event):          # API schema generated from the model
+    pass
 
-You write your business logic. The framework handles the plumbing.
 
----
+@router.get("/events", response_model=Page[EventRead])
+async def list_events(params: PageParams = Depends(), q: str | None = None):
+    events = Event.objects.filter(starts_at__gte=utcnow()).order_by("starts_at")
+    if q:
+        events = events.filter(Q(title__icontains=q) | Q(instructor__full_name__icontains=q))
+    return await events.prefetch("instructor").paginate(params)
 
-## Features
 
-| Feature | Description |
-|---|---|
-| **MVT Pattern** | Model → View → Template architecture familiar to Django developers |
-| **JWT Authentication** | Built-in `/auth` router with register, login, logout, refresh, and `/me` endpoints |
-| **SQLAlchemy + Alembic** | Async-ready ORM with full migration support via `makemigrations` / `migrate` |
-| **Signals** | Django-style ORM signals (`pre_save`, `post_save`, `pre_delete`, `post_delete`) wired automatically via SQLAlchemy events |
-| **WebSocket Manager** | Group-aware connection manager with optional Redis channel backend for multi-process scaling |
-| **Security Middleware** | CORS, security headers, rate limiting, and SQL injection protection out of the box |
-| **App Registry** | Auto-discovery system for routers, models, and signals across multiple apps |
-| **CLI Management** | `startproject`, `startapp`, `makemigrations`, `migrate`, `checkmigrations` commands |
+@router.post("/events/{event_id}/registrations", status_code=201)
+async def register(event_id: int, student: Student):
+    event = await Event.objects.get(id=event_id)                # 404 if missing
+    registration = await Registration.objects.create(event_id=event.id, student_id=student.id)
+    on_commit(lambda: send_confirmation.delay(registration.id))  # only if the request commits
+    return registration                                          # duplicate -> 409 (unique constraint)
+```
 
----
+Every model is a real SQLAlchemy model and every QuerySet a real `select()`
+(`qs.statement`), so everything SQLAlchemy can do is still one line away.
+Generated projects pass ruff and mypy out of the box.
 
-## Tech Stack
+**Is it for you?** If you want Django itself, use Django with
+[Django Ninja](https://django-ninja.dev/). fastapi-mvt is for teams on FastAPI
+and SQLAlchemy who want Django's conveniences there. See the
+[comparison](docs/comparison.md).
 
-- **[FastAPI](https://fastapi.tiangolo.com/)** — high-performance async web framework
-- **[SQLAlchemy 2.0](https://docs.sqlalchemy.org/)** — modern ORM with async support
-- **[Alembic](https://alembic.sqlalchemy.org/)** — database schema migration tool
-- **[Pydantic v2](https://docs.pydantic.dev/)** — data validation and settings management
-- **[python-jose](https://github.com/mpdavis/python-jose)** — JWT token signing and verification
-- **[Typer](https://typer.tiangolo.com/)** — CLI built on Click
-- **[Jinja2](https://jinja.palletsprojects.com/)** — templating engine
-- **[Celery](https://docs.celeryq.dev/) + [Redis](https://redis.io/)** — background task queue
-- **[websockets](https://websockets.readthedocs.io/)** — WebSocket support with Redis pub/sub scaling
-
----
-
-## Installation
+## Quick start
 
 ```bash
-pip install fastapi-mvt
+pip install "fastapi-mvt[auth,server,test]"
+fastapi-mvt startproject shop
+cd shop
+pip install -e ".[test]"
+python manage.py startapp catalog --crud Product    # model + schemas + CRUD router + tests
+python manage.py makemigrations
+python manage.py migrate
+python manage.py createsuperuser
+python manage.py runserver                          # http://127.0.0.1:8000/docs
+pytest
 ```
-
-Or install from source:
-
-```bash
-git clone https://github.com/yourusername/fastapi-mvt
-cd fastapi-mvt
-pip install -e .
-```
-
----
-
-## Quick Start
-
-### 1. Create a new project
-
-```bash
-fastapi-mvt startproject myproject
-cd myproject
-```
-
-### 2. Create an app
-
-```bash
-fastapi-mvt startapp blog
-```
-
-### 3. Run migrations
-
-```bash
-fastapi-mvt makemigrations
-fastapi-mvt migrate
-```
-
-### 4. Start the server
-
-```bash
-uvicorn myproject.asgi:app --reload
-```
-
----
-
-## Project Structure
-
-After running `startproject`, you get:
-
-```
-myproject/
-├── manage.py               # CLI entry point
-├── .env                    # Environment variables
-├── myproject/
-│   ├── settings.py         # Project settings (INSTALLED_APPS, DB, etc.)
-│   ├── urls.py             # Root router
-│   └── asgi.py             # ASGI application entry point
-├── apps/
-│   └── blog/               # An example app (via startapp)
-│       ├── models.py       # SQLAlchemy models
-│       ├── views.py        # FastAPI route handlers
-│       ├── schemas.py      # Pydantic schemas
-│       ├── signals.py      # Signal receivers
-│       └── router.py       # APIRouter definition
-└── migrations/
-    └── versions/           # Alembic migration files
-```
-
----
-
-## Core Concepts
-
-### Authentication
-
-FastAPI MVT ships a plug-and-play JWT auth system. Configure it once in `settings.py`:
-
-```python
-from fastapi_mvt.auth import configure_auth, AuthConfig
-
-configure_auth(AuthConfig(
-    secret_key="your-secret-key",
-    user_model="apps.accounts.models.User",   # omit to use built-in DefaultAuthUser
-))
-```
-
-Then include the built-in auth router:
-
-```python
-from fastapi import FastAPI
-from fastapi_mvt.auth import auth_router
-
-app = FastAPI()
-app.include_router(auth_router)
-```
-
-Available endpoints:
-
-| Method | Path | Description |
-|---|---|---|
-| `POST` | `/auth/register` | Create account, returns token pair |
-| `POST` | `/auth/login` | Authenticate, returns token pair |
-| `POST` | `/auth/logout` | Revoke access token |
-| `POST` | `/auth/refresh` | Exchange refresh token for new access token |
-| `GET` | `/auth/me` | Return authenticated user identity |
-
-Protect your own routes with the `get_current_user` dependency:
-
-```python
-from fastapi import Depends
-from fastapi_mvt.auth import get_current_user
-
-@router.get("/profile")
-def profile(user=Depends(get_current_user)):
-    return {"id": user.id, "email": user.email}
-```
-
----
-
-### Signals
-
-Signals fire automatically when SQLAlchemy models are saved or deleted — no manual `.send()` calls needed inside views.
-
-```python
-from fastapi_mvt.core.signals import receiver, post_save
-from apps.blog.models import Post
-
-@receiver(post_save, sender=Post)
-async def on_post_saved(sender, instance, created, **kwargs):
-    if created:
-        print(f"New post published: {instance.title}")
-```
-
-Register signals during startup:
-
-```python
-from fastapi_mvt.core.signals import register_all_model_signals
-from myproject.db import Base
-
-register_all_model_signals(Base)
-```
-
-Available signals: `pre_save`, `post_save`, `pre_delete`, `post_delete`, `post_init`
-
----
-
-### WebSocket
-
-A group-aware WebSocket connection manager is included. For multi-process deployments, swap in the Redis backend:
-
-```python
-from fastapi_mvt.utils.websocket import ConnectionManager, RedisChannelBackend
-import redis.asyncio as aioredis
-
-redis_client = aioredis.from_url("redis://localhost")
-manager = ConnectionManager(channel_backend=RedisChannelBackend(redis_client))
-```
-
-Use in route handlers:
-
-```python
-from fastapi import WebSocket
-from fastapi_mvt.utils.websocket import manager
-
-@app.websocket("/ws/{room}")
-async def websocket_endpoint(websocket: WebSocket, room: str):
-    conn_id = await manager.connect(websocket, group=room)
-    try:
-        while True:
-            data = await websocket.receive_text()
-            await manager.send_to_group(room, {"message": data})
-    finally:
-        await manager.disconnect(conn_id)
-```
-
----
-
-### Middleware
-
-Security middleware is applied automatically. You can also configure it manually:
-
-```python
-from fastapi_mvt.middleware import setup_security_middleware, setup_cors_middleware
-
-setup_cors_middleware(app, origins=["https://example.com"])
-setup_security_middleware(app)
-```
-
-Built-in middleware:
-
-- `SecurityHeadersMiddleware` — adds `X-Content-Type-Options`, `X-Frame-Options`, `HSTS`, `CSP`, and more
-- `SQLInjectionProtectionMiddleware` — blocks common SQL injection patterns in request parameters
-- `RateLimitMiddleware` — request-rate throttling per IP
-- `CustomMiddleware` — base class for your own middleware
-
----
-
-### App Registry
-
-Register apps in `settings.py` and the framework auto-discovers their routers, models, and signals:
-
-```python
-INSTALLED_APPS = [
-    "apps.blog",
-    "apps.accounts",
-]
-```
-
----
-
-## CLI Reference
-
-| Command | Description |
-|---|---|
-| `fastapi-mvt startproject <name>` | Scaffold a new project |
-| `fastapi-mvt startapp <name>` | Scaffold a new app inside a project |
-| `fastapi-mvt makemigrations [app]` | Generate Alembic migration from model changes |
-| `fastapi-mvt migrate` | Apply pending migrations to the database |
-| `fastapi-mvt checkmigrations` | Report empty or no-op migration files |
-
----
-
-## Configuration
-
-All settings live in your project's `settings.py`. Key options:
-
-```python
-# Database
-DATABASE_URL = "sqlite+aiosqlite:///./db.sqlite3"
-# DATABASE_URL = "postgresql+asyncpg://user:pass@localhost/dbname"
-
-# Auth
-SECRET_KEY = "change-me-in-production"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30
-REFRESH_TOKEN_EXPIRE_DAYS = 7
-
-# Apps
-INSTALLED_APPS = [
-    "apps.blog",
-    "apps.accounts",
-]
-
-# CORS
-CORS_ORIGINS = ["http://localhost:3000"]
-```
-
----
 
 ## Documentation
 
-Full documentation is available at **[https://odaithalji.gitbook.io/fastapi](https://odaithalji.gitbook.io/fastapi)**
+| | |
+|---|---|
+| [**Tutorial**](docs/tutorial.md) | Build an eLearning API step by step, from an empty folder to production |
+| [ORM guide](docs/orm.md) | Models, relationships, queries, transactions, schemas, pagination |
+| [Migrations guide](docs/migrations.md) | Commands, safety checks, teams, production |
+| [Testing guide](docs/testing.md) | `client` / `db` fixtures, test databases |
+| [Auth and admin](docs/auth-and-admin.md) | Users, tokens, permissions, the admin site |
+| [Deployment](docs/deployment.md) | Settings, release steps, Docker, background jobs |
+| [Command line](docs/cli.md) | Every command, and writing your own |
+| [Comparison](docs/comparison.md) | vs Django Ninja, SQLModel, the full-stack template, plain SQLAlchemy |
+| [Design notes](docs/design.md) | Why it's built this way |
+| [Upgrading from 0.1](docs/upgrading-from-0.1.md) | |
+| [Roadmap](ROADMAP.md) | Where it stands and what comes next |
 
----
+The [showcase repository](https://github.com/OdaiAhmed99/fastapi-mvt-showcase)
+is the tutorial's finished app.
 
-## License
+## Commands
 
-MIT License — see [LICENSE](LICENSE) for details.
+The full documentation is at **<https://odaiahmed99.github.io/fastapi-mvt/>** (built from `docs/`).
+
+| Command | |
+|---|---|
+| `startproject <name>` / `startapp <name> [--crud Model]` | scaffold (never overwrites files) |
+| `makemigrations` / `migrate [target]` / `showmigrations` / `rollback` / `sqlmigrate` | migrations |
+| `runserver` / `shell` / `routes` / `createsuperuser` | development |
+| `check` | CI: config, models, pending or missing migrations |
+| your own | any app's `commands.py` adds `manage.py` commands ([CLI](docs/cli.md)) |
+
+## Installation extras
+
+| Extra | Adds |
+|---|---|
+| (core) | FastAPI, SQLAlchemy 2 (async), Alembic, pydantic-settings, SQLite driver |
+| `postgres` | asyncpg |
+| `mysql` | aiomysql (experimental: not covered by the test suite yet) |
+| `auth` | PyJWT, python-multipart |
+| `admin` | SQLAdmin |
+| `redis` | multi-process WebSockets |
+| `server` | uvicorn |
+| `test` | pytest, pytest-asyncio, httpx |
+
+Python 3.10+. Tested on SQLite and PostgreSQL 16.
+
+## Development
+
+```bash
+pip install -e ".[dev]" --config-settings editable_mode=compat   # compat: so mypy can see the package
+pytest                                   # SQLite
+TEST_DATABASE_URL=postgresql://user:pass@localhost/mvt pytest   # PostgreSQL
+pytest -m "not slow"                     # skip the end-to-end CLI tests
+```
+
+MIT licensed.

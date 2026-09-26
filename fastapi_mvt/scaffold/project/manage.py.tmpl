@@ -1,0 +1,16 @@
+#!/usr/bin/env python
+"""Project commands: `python manage.py <command>` (same as `fastapi-mvt <command>`).
+
+    python manage.py runserver
+    python manage.py startapp blog --crud Post
+    python manage.py makemigrations
+    python manage.py migrate
+    python manage.py showmigrations
+    python manage.py createsuperuser
+    python manage.py shell
+"""
+
+from fastapi_mvt.cli import main
+
+if __name__ == "__main__":
+    main()

@@ -1,0 +1,28 @@
+"""Request and response schemas for {{app}}.
+
+`ModelSchema` takes its fields from the model (types, lengths, optional fields).
+Declare a field yourself to override it or add validation.
+"""
+{% crud %}
+
+from fastapi_mvt.db import ModelSchema
+from {{app}}.models import {{Model}}
+
+
+class {{Model}}Create(ModelSchema, model={{Model}}, mode="create"):
+    pass
+
+
+class {{Model}}Update(ModelSchema, model={{Model}}, mode="update"):
+    pass
+
+
+class {{Model}}Read(ModelSchema, model={{Model}}):
+    pass
+{% else %}
+
+# from fastapi_mvt.db import ModelSchema
+#
+# class PostRead(ModelSchema, model=Post):
+#     pass
+{% end %}

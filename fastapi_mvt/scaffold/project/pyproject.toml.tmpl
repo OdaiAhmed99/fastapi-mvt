@@ -1,0 +1,27 @@
+[project]
+name = "{{project}}"
+version = "0.1.0"
+requires-python = ">=3.10"
+dependencies = [
+    "fastapi-mvt[auth,server]>={{version}}",
+]
+
+[project.optional-dependencies]
+postgres = ["fastapi-mvt[postgres]"]
+admin = ["fastapi-mvt[admin]"]
+test = ["fastapi-mvt[test]"]
+
+[tool.fastapi-mvt]
+app = "{{project}}.main:app"
+database = "{{project}}.db:db"
+# Every package with a models.py is picked up. List modules here instead to be explicit.
+models = "auto"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+
+[tool.setuptools]
+packages = []
